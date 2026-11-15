@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+</html><!DOCTYPE html>
 <html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
@@ -251,9 +251,13 @@
                     </div>
 
                     <div class="flex items-center gap-2">
+                        <button onclick="syncFromGoogleSheet(true)" id="syncNowBtn" class="px-3 py-2 rounded-xl text-xs font-medium bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition flex items-center gap-1.5" title="Tarik data terbaru dari Google Sheet">
+                            <i data-lucide="refresh-cw" id="syncIcon" class="w-3.5 h-3.5"></i>
+                            <span class="hidden sm:inline">Sinkronkan</span>
+                        </button>
                         <button onclick="exportToCSV()" class="px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
                             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                            Unduh CSV
+                            <span class="hidden sm:inline">Unduh CSV</span>
                         </button>
                         <button onclick="openSetupModal()" class="px-3 py-2 rounded-xl text-xs font-medium bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 transition flex items-center gap-1.5">
                             <i data-lucide="sheet" class="w-3.5 h-3.5"></i>
@@ -349,11 +353,26 @@
                             <span id="copyBtnText">Salin Kode</span>
                         </button>
                         <pre id="appsScriptCode" class="p-4 pt-10 rounded-xl bg-slate-900 text-emerald-400 text-[11px] font-mono overflow-x-auto leading-relaxed">function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
+  var payload = JSON.parse(e.postData.contents);
+  
+  // Jika aksi adalah hapus data dari web
+  if (payload.action === "delete" && payload.id) {
+    var rows = sheet.getDataRange().getValues();
+    for (var i = rows.length - 1; i >= 1; i--) {
+      if (String(rows[i][8]) === String(payload.id)) {
+        sheet.deleteRow(i + 1);
+        break;
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify({ "status": "deleted" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   
   // Buat header otomatis jika baris pertama masih kosong
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
+    var headers = [
       "Tanggal", 
       "Keterangan", 
       "Pendapatan Harian (IDR)", 
@@ -361,44 +380,82 @@
       "Nafkah Istri", 
       "Perbaikan Kendaraan", 
       "Dana Mendesak",
-      "Waktu Input"
-    ]);
+      "Waktu Input",
+      "ID Transaksi"
+    ];
+    sheet.appendRow(headers);
+    var headerRange = sheet.getRange(1, 1, 1, headers.length);
+    headerRange.setBackground("#059669").setFontColor("#ffffff").setFontWeight("bold");
+    sheet.setFrozenRows(1);
   }
   
-  var data = JSON.parse(e.postData.contents);
-  
   sheet.appendRow([
-    data.tanggal,
-    data.keterangan,
-    data.pendapatan,
-    data.tunjanganAnakIstri,
-    data.nafkahIstri,
-    data.perbaikanKendaraan,
-    data.danaMendesak,
-    new Date().toLocaleString("id-ID")
+    payload.tanggal,
+    payload.keterangan,
+    Number(payload.pendapatan) || 0,
+    Number(payload.tunjanganAnakIstri) || 0,
+    Number(payload.nafkahIstri) || 0,
+    Number(payload.perbaikanKendaraan) || 0,
+    Number(payload.danaMendesak) || 0,
+    new Date().toLocaleString("id-ID"),
+    payload.id || ("rec-" + new Date().getTime())
   ]);
+  
+  var lastRow = sheet.getLastRow();
+  sheet.getRange(lastRow, 3, 1, 5).setNumberFormat('"Rp "#,##0');
+  sheet.autoResizeColumns(1, 9);
   
   return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
   var rows = sheet.getDataRange().getValues();
   var result = [];
+  
+  var summary = {
+    totalPendapatan: 0,
+    tunjanganAnakIstri: 0,
+    nafkahIstri: 0,
+    perbaikanKendaraan: 0,
+    danaMendesak: 0
+  };
+  
   for (var i = 1; i < rows.length; i++) {
+    // Lewati baris kosong atau baris tulisan "TOTAL" jika ada di sheet
+    var firstCol = String(rows[i][0] || "").trim().toUpperCase();
+    if ((!rows[i][0] && !rows[i][2]) || firstCol === "TOTAL" || firstCol === "JUMLAH") continue;
+    
+    var pend = Number(rows[i][2]) || 0;
+    var tunj = Number(rows[i][3]) || 0;
+    var nafk = Number(rows[i][4]) || 0;
+    var kend = Number(rows[i][5]) || 0;
+    var mend = Number(rows[i][6]) || 0;
+    
+    summary.totalPendapatan += pend;
+    summary.tunjanganAnakIstri += tunj;
+    summary.nafkahIstri += nafk;
+    summary.perbaikanKendaraan += kend;
+    summary.danaMendesak += mend;
+    
     result.push({
+      id: rows[i][8] ? String(rows[i][8]) : ("sheet-row-" + i),
       tanggal: rows[i][0],
       keterangan: rows[i][1],
-      pendapatan: Number(rows[i][2]) || 0,
-      tunjanganAnakIstri: Number(rows[i][3]) || 0,
-      nafkahIstri: Number(rows[i][4]) || 0,
-      perbaikanKendaraan: Number(rows[i][5]) || 0,
-      danaMendesak: Number(rows[i][6]) || 0
+      pendapatan: pend,
+      tunjanganAnakIstri: tunj,
+      nafkahIstri: nafk,
+      perbaikanKendaraan: kend,
+      danaMendesak: mend
     });
   }
-  return ContentService.createTextOutput(JSON.stringify(result))
-    .setMimeType(ContentService.MimeType.JSON);
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    records: result,
+    summary: summary
+  })).setMimeType(ContentService.MimeType.JSON);
 }</pre>
                     </div>
 
@@ -457,7 +514,9 @@ function doGet(e) {
             }
         ];
         let googleSheetWebhookUrl = '';
+        let sheetSummary = null; // Menyimpan ringkasan saldo langsung dari Google Sheet
         let recordIdToDelete = null;
+        let autoSyncInterval = null;
 
         // Inisialisasi saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
@@ -467,49 +526,49 @@ function doGet(e) {
             renderAll();
         });
 
-        // Format Angka ke Rupiah (IDR)
-        function formatIDR(number) {
+        // Format Angka ke IDR (Rupiah)
+        function formatIDR(amount) {
             return new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
-            }).format(number || 0);
+            }).format(amount || 0);
         }
 
-        // Format Ribuan saat mengetik (tanpa simbol Rp di dalam input)
-        function formatThousands(value) {
-            const numericString = value.replace(/\D/g, '');
-            if (!numericString) return '';
-            return new Intl.NumberFormat('id-ID').format(parseInt(numericString, 10));
+        // Format angka dengan pemisah ribuan titik untuk input field
+        function formatNumberInput(value) {
+            const numeric = String(value).replace(/\D/g, '');
+            if (!numeric) return '';
+            return new Intl.NumberFormat('id-ID').format(parseInt(numeric, 10));
         }
 
-        // Konversi string berformat ribuan kembali menjadi angka integer
-        function parseIDRInput(value) {
-            if (!value) return 0;
-            const clean = value.toString().replace(/\D/g, '');
-            return clean ? parseInt(clean, 10) : 0;
+        // Ambil nilai integer dari input berformat IDR
+        function parseIDRInput(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return 0;
+            const raw = el.value.replace(/\D/g, '');
+            return raw ? parseInt(raw, 10) : 0;
         }
 
-        // Setup Event Listener untuk semua input mata uang IDR
+        // Pasang event listener auto-format pada seluruh input mata uang
         function setupCurrencyInputs() {
             const inputs = document.querySelectorAll('.idr-input');
             inputs.forEach(input => {
                 input.addEventListener('input', (e) => {
-                    const formatted = formatThousands(e.target.value);
-                    e.target.value = formatted;
+                    e.target.value = formatNumberInput(e.target.value);
                     calculateRemaining();
                 });
             });
         }
 
-        // Hitung sisa pendapatan yang belum dibagikan ke 4 pos secara real-time
+        // Hitung sisa pendapatan yang belum dialokasikan ke 4 pos
         function calculateRemaining() {
-            const totalIncome = parseIDRInput(document.getElementById('inputTotalIncome').value);
-            const pos1 = parseIDRInput(document.getElementById('inputPos1').value);
-            const pos2 = parseIDRInput(document.getElementById('inputPos2').value);
-            const pos3 = parseIDRInput(document.getElementById('inputPos3').value);
-            const pos4 = parseIDRInput(document.getElementById('inputPos4').value);
+            const totalIncome = parseIDRInput('inputTotalIncome');
+            const pos1 = parseIDRInput('inputPos1');
+            const pos2 = parseIDRInput('inputPos2');
+            const pos3 = parseIDRInput('inputPos3');
+            const pos4 = parseIDRInput('inputPos4');
 
             const allocated = pos1 + pos2 + pos3 + pos4;
             const remaining = totalIncome - allocated;
@@ -517,30 +576,27 @@ function doGet(e) {
             const indicator = document.getElementById('remainingIndicator');
             const alertBox = document.getElementById('allocationAlert');
 
-            if (remaining === 0) {
-                indicator.textContent = 'Pas: Rp 0';
-                indicator.className = 'text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300';
+            indicator.textContent = `Sisa: ${formatIDR(remaining)}`;
+
+            if (totalIncome > 0 && remaining === 0) {
+                indicator.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300';
                 alertBox.classList.add('hidden');
-            } else if (remaining > 0) {
-                indicator.textContent = `Sisa: ${formatIDR(remaining)}`;
-                indicator.className = 'text-xs font-medium px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300';
-                if (totalIncome > 0 && allocated > 0) {
-                    alertBox.textContent = `Masih ada sisa pendapatan sebesar ${formatIDR(remaining)} yang belum dialokasikan.`;
-                    alertBox.classList.remove('hidden');
-                } else {
-                    alertBox.classList.add('hidden');
-                }
-            } else {
-                indicator.textContent = `Lebih: ${formatIDR(Math.abs(remaining))}`;
-                indicator.className = 'text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300';
-                alertBox.textContent = `Total pembagian 4 pos melebihi pendapatan hari ini sebesar ${formatIDR(Math.abs(remaining))}!`;
+            } else if (remaining < 0) {
+                indicator.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-md bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300';
+                alertBox.textContent = `Perhatian: Total pembagian melebihi pendapatan sebesar ${formatIDR(Math.abs(remaining))}.`;
                 alertBox.classList.remove('hidden');
+            } else if (totalIncome > 0 && remaining > 0) {
+                indicator.className = 'text-xs font-medium px-2.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300';
+                alertBox.classList.add('hidden');
+            } else {
+                indicator.className = 'text-xs font-medium px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
+                alertBox.classList.add('hidden');
             }
         }
 
-        // Fitur Pembagian Otomatis (40% Anak & Istri, 25% Nafkah Istri, 15% Kendaraan, 20% Dana Mendesak)
+        // Bagi Otomatis berdasarkan proporsi default (40%, 25%, 15%, 20%)
         function autoDistribute() {
-            const totalIncome = parseIDRInput(document.getElementById('inputTotalIncome').value);
+            const totalIncome = parseIDRInput('inputTotalIncome');
             if (totalIncome <= 0) {
                 showToast('Masukkan jumlah pendapatan hari ini terlebih dahulu.', 'warning');
                 document.getElementById('inputTotalIncome').focus();
@@ -550,34 +606,39 @@ function doGet(e) {
             const p1 = Math.round(totalIncome * 0.40);
             const p2 = Math.round(totalIncome * 0.25);
             const p3 = Math.round(totalIncome * 0.15);
-            // Sisa dimasukkan ke pos 4 agar totalnya 100% akurat tanpa selisih pembulatan
-            const p4 = totalIncome - (p1 + p2 + p3);
+            const p4 = totalIncome - (p1 + p2 + p3); // Sisa presisi masuk ke Dana Mendesak
 
-            document.getElementById('inputPos1').value = formatThousands(p1.toString());
-            document.getElementById('inputPos2').value = formatThousands(p2.toString());
-            document.getElementById('inputPos3').value = formatThousands(p3.toString());
-            document.getElementById('inputPos4').value = formatThousands(p4.toString());
+            document.getElementById('inputPos1').value = formatNumberInput(p1);
+            document.getElementById('inputPos2').value = formatNumberInput(p2);
+            document.getElementById('inputPos3').value = formatNumberInput(p3);
+            document.getElementById('inputPos4').value = formatNumberInput(p4);
 
             calculateRemaining();
-            showToast('Pendapatan berhasil dibagi otomatis ke 4 pos tabungan!', 'success');
+            showToast('Pendapatan berhasil dibagi otomatis ke 4 pos!', 'info');
         }
 
-        // Handle Submit Form
+        // Submit Form Pencatatan Harian
         document.getElementById('financeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const tanggal = document.getElementById('inputDate').value;
             const keterangan = document.getElementById('inputNote').value.trim() || 'Pendapatan Harian';
-            const pendapatan = parseIDRInput(document.getElementById('inputTotalIncome').value);
-            const tunjanganAnakIstri = parseIDRInput(document.getElementById('inputPos1').value);
-            const nafkahIstri = parseIDRInput(document.getElementById('inputPos2').value);
-            const perbaikanKendaraan = parseIDRInput(document.getElementById('inputPos3').value);
-            const danaMendesak = parseIDRInput(document.getElementById('inputPos4').value);
+            const pendapatan = parseIDRInput('inputTotalIncome');
+            const tunjanganAnakIstri = parseIDRInput('inputPos1');
+            const nafkahIstri = parseIDRInput('inputPos2');
+            const perbaikanKendaraan = parseIDRInput('inputPos3');
+            const danaMendesak = parseIDRInput('inputPos4');
 
             if (pendapatan <= 0) {
-                showToast('Jumlah pendapatan harus lebih dari Rp 0.', 'error');
+                showToast('Jumlah pendapatan hari ini harus lebih dari Rp 0.', 'error');
                 return;
             }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyimpan...</span>`;
+            lucide.createIcons();
 
             const newRecord = {
                 id: 'rec-' + Date.now(),
@@ -591,14 +652,7 @@ function doGet(e) {
                 synced: false
             };
 
-            // Ubah state tombol menjadi loading
-            const submitBtn = document.getElementById('submitBtn');
-            const originalBtnHtml = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyimpan Data...</span>`;
-            lucide.createIcons();
-
-            // Jika URL Google Sheet sudah diatur, kirim data via POST
+            // Jika URL Google Sheet sudah diatur, kirim data via POST lalu sinkronkan ulang
             if (googleSheetWebhookUrl) {
                 try {
                     await fetch(googleSheetWebhookUrl, {
@@ -607,7 +661,7 @@ function doGet(e) {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(newRecord)
+                        body: JSON.stringify({ action: 'create', ...newRecord })
                     });
                     newRecord.synced = true;
                     showToast('Tersimpan di web & terkirim ke Google Sheet!', 'success');
@@ -623,6 +677,11 @@ function doGet(e) {
             records.unshift(newRecord);
             renderAll();
 
+            // Tarik ulang data dari Google Sheet setelah 1.5 detik agar 100% identik dengan database
+            if (googleSheetWebhookUrl) {
+                setTimeout(() => syncFromGoogleSheet(false), 1500);
+            }
+
             // Reset Form Input Angka
             document.getElementById('inputNote').value = '';
             document.getElementById('inputTotalIncome').value = '';
@@ -637,37 +696,43 @@ function doGet(e) {
             lucide.createIcons();
         });
 
-        // Render Ringkasan & Tabel Real-Time
+        // Render Ulang Ringkasan Saldo & Tabel Riwayat
         function renderAll() {
-            let sumIncome = 0;
+            let grandTotal = 0;
             let sumPos1 = 0;
             let sumPos2 = 0;
             let sumPos3 = 0;
             let sumPos4 = 0;
 
-            records.forEach(item => {
-                sumIncome += item.pendapatan;
-                sumPos1 += item.tunjanganAnakIstri;
-                sumPos2 += item.nafkahIstri;
-                sumPos3 += item.perbaikanKendaraan;
-                sumPos4 += item.danaMendesak;
-            });
+            // Jika terhubung & memiliki ringkasan langsung dari Google Sheet, gunakan angka dari Sheet
+            if (googleSheetWebhookUrl && sheetSummary) {
+                grandTotal = Number(sheetSummary.totalPendapatan) || 0;
+                sumPos1 = Number(sheetSummary.tunjanganAnakIstri) || 0;
+                sumPos2 = Number(sheetSummary.nafkahIstri) || 0;
+                sumPos3 = Number(sheetSummary.perbaikanKendaraan) || 0;
+                sumPos4 = Number(sheetSummary.danaMendesak) || 0;
+            } else {
+                records.forEach(item => {
+                    grandTotal += Number(item.pendapatan) || 0;
+                    sumPos1 += Number(item.tunjanganAnakIstri) || 0;
+                    sumPos2 += Number(item.nafkahIstri) || 0;
+                    sumPos3 += Number(item.perbaikanKendaraan) || 0;
+                    sumPos4 += Number(item.danaMendesak) || 0;
+                });
+            }
 
-            // Update Kartu Ringkasan
-            document.getElementById('grandTotalIncome').textContent = formatIDR(sumIncome);
+            document.getElementById('grandTotalIncome').textContent = formatIDR(grandTotal);
             document.getElementById('totalPos1').textContent = formatIDR(sumPos1);
             document.getElementById('totalPos2').textContent = formatIDR(sumPos2);
             document.getElementById('totalPos3').textContent = formatIDR(sumPos3);
             document.getElementById('totalPos4').textContent = formatIDR(sumPos4);
 
-            // Update Persentase Alokasi
-            const calcPct = (val) => sumIncome > 0 ? Math.round((val / sumIncome) * 100) + '%' : '0%';
-            document.getElementById('pctPos1').textContent = calcPct(sumPos1);
-            document.getElementById('pctPos2').textContent = calcPct(sumPos2);
-            document.getElementById('pctPos3').textContent = calcPct(sumPos3);
-            document.getElementById('pctPos4').textContent = calcPct(sumPos4);
+            const totalAllocated = sumPos1 + sumPos2 + sumPos3 + sumPos4;
+            document.getElementById('pctPos1').textContent = totalAllocated > 0 ? Math.round((sumPos1 / totalAllocated) * 100) + '%' : '0%';
+            document.getElementById('pctPos2').textContent = totalAllocated > 0 ? Math.round((sumPos2 / totalAllocated) * 100) + '%' : '0%';
+            document.getElementById('pctPos3').textContent = totalAllocated > 0 ? Math.round((sumPos3 / totalAllocated) * 100) + '%' : '0%';
+            document.getElementById('pctPos4').textContent = totalAllocated > 0 ? Math.round((sumPos4 / totalAllocated) * 100) + '%' : '0%';
 
-            // Render Tabel Riwayat
             const tbody = document.getElementById('recordsTableBody');
             const emptyState = document.getElementById('emptyState');
 
@@ -678,62 +743,110 @@ function doGet(e) {
             }
 
             emptyState.classList.add('hidden');
-            tbody.innerHTML = records.map(item => `
-                <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition">
-                    <td class="py-3.5 px-4 whitespace-nowrap">
-                        <div class="font-semibold text-slate-900 dark:text-white text-xs">${formatDateID(item.tanggal)}</div>
-                        <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[140px]">${escapeHtml(item.keterangan)}</div>
-                    </td>
-                    <td class="py-3.5 px-4 text-right font-bold text-slate-900 dark:text-white whitespace-nowrap text-xs">
-                        ${formatIDR(item.pendapatan)}
-                    </td>
-                    <td class="py-3.5 px-4 text-right text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap text-xs">
-                        ${formatIDR(item.tunjanganAnakIstri)}
-                    </td>
-                    <td class="py-3.5 px-4 text-right text-rose-600 dark:text-rose-400 font-medium whitespace-nowrap text-xs">
-                        ${formatIDR(item.nafkahIstri)}
-                    </td>
-                    <td class="py-3.5 px-4 text-right text-amber-600 dark:text-amber-400 font-medium whitespace-nowrap text-xs">
-                        ${formatIDR(item.perbaikanKendaraan)}
-                    </td>
-                    <td class="py-3.5 px-4 text-right text-emerald-600 dark:text-emerald-400 font-semibold whitespace-nowrap text-xs">
-                        ${formatIDR(item.danaMendesak)}
-                    </td>
-                    <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                        ${item.synced 
-                            ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300" title="Tersimpan di Google Sheet"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Sheet</span>`
-                            : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300" title="Tersimpan di sesi browser"><i data-lucide="database" class="w-3 h-3"></i> Lokal</span>`
-                        }
-                    </td>
-                    <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                        <button onclick="promptDelete('${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition" title="Hapus Baris">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = records.map(item => {
+                const statusBadge = item.synced
+                    ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300" title="Tersinkron dengan Google Sheet"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Sheet</span>`
+                    : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300" title="Tersimpan di sesi web"><i data-lucide="clock" class="w-3 h-3"></i> Lokal</span>`;
+
+                return `
+                    <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition">
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                            <div class="font-semibold text-slate-900 dark:text-white text-xs">${escapeHtml(item.tanggal)}</div>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[140px]">${escapeHtml(item.keterangan)}</div>
+                        </td>
+                        <td class="py-3.5 px-4 text-right font-bold text-slate-900 dark:text-white whitespace-nowrap text-xs">${formatIDR(item.pendapatan)}</td>
+                        <td class="py-3.5 px-4 text-right text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap text-xs">${formatIDR(item.tunjanganAnakIstri)}</td>
+                        <td class="py-3.5 px-4 text-right text-rose-600 dark:text-rose-400 font-medium whitespace-nowrap text-xs">${formatIDR(item.nafkahIstri)}</td>
+                        <td class="py-3.5 px-4 text-right text-amber-600 dark:text-amber-400 font-medium whitespace-nowrap text-xs">${formatIDR(item.perbaikanKendaraan)}</td>
+                        <td class="py-3.5 px-4 text-right text-emerald-600 dark:text-emerald-400 font-semibold whitespace-nowrap text-xs">${formatIDR(item.danaMendesak)}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${statusBadge}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                            <button onclick="openDeleteModal('${escapeHtml(item.id)}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition" title="Hapus">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
 
             lucide.createIcons();
         }
 
-        // Format Tanggal ke Bahasa Indonesia
-        function formatDateID(dateStr) {
-            if (!dateStr) return '-';
-            const options = { day: 'numeric', month: 'short', year: 'numeric' };
-            return new Date(dateStr).toLocaleDateString('id-ID', options);
+        // Fungsi Sinkronisasi Dua Arah: Menyamakan data website dengan database Google Sheet
+        async function syncFromGoogleSheet(showNotification = false) {
+            if (!googleSheetWebhookUrl) {
+                if (showNotification) {
+                    showToast('Hubungkan URL Google Sheet terlebih dahulu.', 'warning');
+                    openSetupModal();
+                }
+                return;
+            }
+
+            const syncIcon = document.getElementById('syncIcon');
+            if (syncIcon) syncIcon.classList.add('animate-spin');
+
+            try {
+                // Tambahkan parameter timestamp agar browser tidak mengambil cache lama
+                const fetchUrl = googleSheetWebhookUrl + (googleSheetWebhookUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                const res = await fetch(fetchUrl);
+                const payload = await res.json();
+
+                // Mendukung format baru { records, summary } maupun format lama (array)
+                const sheetData = Array.isArray(payload) ? payload : (payload.records || []);
+                if (payload && payload.summary) {
+                    sheetSummary = payload.summary;
+                } else {
+                    sheetSummary = null;
+                }
+
+                if (Array.isArray(sheetData)) {
+                    const formattedSheetRecords = sheetData.reverse().map((row, idx) => {
+                        let parsedDate = new Date().toISOString().split('T')[0];
+                        if (row.tanggal) {
+                            const d = new Date(row.tanggal);
+                            if (!isNaN(d.getTime())) {
+                                parsedDate = d.toISOString().split('T')[0];
+                            } else if (typeof row.tanggal === 'string') {
+                                parsedDate = row.tanggal.split('T')[0];
+                            }
+                        }
+
+                        return {
+                            id: row.id || ('sheet-' + idx),
+                            tanggal: parsedDate,
+                            keterangan: row.keterangan || 'Pendapatan Harian',
+                            pendapatan: Number(row.pendapatan) || 0,
+                            tunjanganAnakIstri: Number(row.tunjanganAnakIstri) || 0,
+                            nafkahIstri: Number(row.nafkahIstri) || 0,
+                            perbaikanKendaraan: Number(row.perbaikanKendaraan) || 0,
+                            danaMendesak: Number(row.danaMendesak) || 0,
+                            synced: true
+                        };
+                    });
+
+                    // Ganti seluruh data di website agar 100% sama persis dengan Google Sheet
+                    records = formattedSheetRecords;
+                    renderAll();
+
+                    if (showNotification) {
+                        showToast(`Ringkasan saldo & ${records.length} baris data sudah sama dengan Google Sheet!`, 'success');
+                    }
+                }
+            } catch (err) {
+                console.error('Gagal sinkronisasi:', err);
+                if (showNotification) {
+                    showToast('Gagal mengambil data dari Google Sheet. Pastikan akses Web App diatur ke "Siapa saja (Anyone)".', 'error');
+                }
+            } finally {
+                if (syncIcon) syncIcon.classList.remove('animate-spin');
+            }
         }
 
-        // Escape HTML untuk keamanan XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Manajemen Modal Integrasi Google Sheet
+        // Pengaturan Modal Google Sheet
         function openSetupModal() {
             document.getElementById('webhookUrlInput').value = googleSheetWebhookUrl;
             document.getElementById('setupModal').classList.remove('hidden');
+            lucide.createIcons();
         }
 
         function closeSetupModal() {
@@ -753,111 +866,70 @@ function doGet(e) {
 
             googleSheetWebhookUrl = url;
 
+            // Hentikan interval sinkronisasi lama jika ada
+            if (autoSyncInterval) {
+                clearInterval(autoSyncInterval);
+                autoSyncInterval = null;
+            }
+
             if (googleSheetWebhookUrl) {
                 btn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:opacity-90 transition';
                 dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
                 text.textContent = 'Terhubung ke Google Sheet';
-                showToast('URL Google Sheet berhasil dihubungkan!', 'success');
+                closeSetupModal();
                 
-                // Coba ambil data yang sudah ada di Google Sheet (doGet)
-                try {
-                    const res = await fetch(googleSheetWebhookUrl);
-                    const sheetData = await res.json();
-                    if (Array.isArray(sheetData) && sheetData.length > 0) {
-                        const formattedSheetRecords = sheetData.reverse().map((row, idx) => ({
-                            id: 'sheet-' + idx + '-' + Date.now(),
-                            tanggal: row.tanggal ? new Date(row.tanggal).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-                            keterangan: row.keterangan || 'Data dari Sheet',
-                            pendapatan: Number(row.pendapatan) || 0,
-                            tunjanganAnakIstri: Number(row.tunjanganAnakIstri) || 0,
-                            nafkahIstri: Number(row.nafkahIstri) || 0,
-                            perbaikanKendaraan: Number(row.perbaikanKendaraan) || 0,
-                            danaMendesak: Number(row.danaMendesak) || 0,
-                            synced: true
-                        }));
-                        records = formattedSheetRecords;
-                        renderAll();
-                        showToast(`Berhasil memuat ${records.length} data dari Google Sheet!`, 'success');
-                    }
-                } catch (e) {
-                    // Tetap lanjut jika doGet belum diaktifkan/kosong
-                }
+                // Langsung samakan data website dengan Google Sheet
+                await syncFromGoogleSheet(true);
+
+                // Aktifkan sinkronisasi otomatis setiap 15 detik agar perubahan manual di Sheet ikut tampil di Web
+                autoSyncInterval = setInterval(() => {
+                    syncFromGoogleSheet(false);
+                }, 15000);
             } else {
+                sheetSummary = null;
                 btn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:opacity-90 transition';
                 dot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
                 text.textContent = 'Mode Lokal (Klik Atur Sheet)';
+                renderAll();
                 showToast('Koneksi Google Sheet dinonaktifkan (Mode Lokal).', 'info');
+                closeSetupModal();
             }
-
-            closeSetupModal();
         }
 
-        // Salin Kode Google Apps Script ke Clipboard (menggunakan execCommand sesuai aturan)
         function copyAppsScript() {
-            const codeText = document.getElementById('appsScriptCode').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeText;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
+            const code = document.getElementById('appsScriptCode').innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+
             try {
-                document.execCommand('copy');
-                const btnText = document.getElementById('copyBtnText');
-                btnText.textContent = 'Tersalin!';
-                showToast('Kode Google Apps Script berhasil disalin!', 'success');
-                setTimeout(() => {
-                    btnText.textContent = 'Salin Kode';
-                }, 2500);
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const btnText = document.getElementById('copyBtnText');
+                    btnText.textContent = 'Tersalin!';
+                    showToast('Kode Google Apps Script berhasil disalin!', 'success');
+                    setTimeout(() => {
+                        btnText.textContent = 'Salin Kode';
+                    }, 2000);
+                } else {
+                    showToast('Gagal menyalin otomatis. Silakan blok dan salin teks kode secara manual.', 'warning');
+                }
             } catch (err) {
-                showToast('Gagal menyalin kode secara otomatis.', 'error');
+                console.error('Gagal menyalin teks:', err);
+                showToast('Gagal menyalin otomatis. Silakan blok dan salin teks kode secara manual.', 'warning');
+            } finally {
+                document.body.removeChild(textarea);
             }
-            document.body.removeChild(tempTextArea);
         }
 
-        // Unduh CSV untuk Backup Manual ke Excel / Google Sheets
-        function exportToCSV() {
-            if (records.length === 0) {
-                showToast('Tidak ada data untuk diunduh.', 'warning');
-                return;
-            }
-
-            const headers = [
-                'Tanggal',
-                'Keterangan',
-                'Pendapatan Harian (IDR)',
-                'Tunjangan Anak & Istri',
-                'Nafkah Istri',
-                'Kebutuhan Perbaikan Kendaraan',
-                'Dana Mendesak'
-            ];
-
-            const rows = records.map(r => [
-                r.tanggal,
-                `"${r.keterangan.replace(/"/g, '""')}"`,
-                r.pendapatan,
-                r.tunjanganAnakIstri,
-                r.nafkahIstri,
-                r.perbaikanKendaraan,
-                r.danaMendesak
-            ]);
-
-            const csvContent = "data:text/csv;charset=utf-8," 
-                + headers.join(",") + "\n" 
-                + rows.map(e => e.join(",")).join("\n");
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Keuangan_Keluarga_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('File CSV berhasil diunduh!', 'success');
-        }
-
-        // Manajemen Hapus Baris
-        function promptDelete(id) {
+        // Modal Konfirmasi Hapus
+        function openDeleteModal(id) {
             recordIdToDelete = id;
             document.getElementById('deleteModal').classList.remove('hidden');
+            lucide.createIcons();
         }
 
         function closeDeleteModal() {
@@ -865,25 +937,77 @@ function doGet(e) {
             document.getElementById('deleteModal').classList.add('hidden');
         }
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
             if (recordIdToDelete) {
-                records = records.filter(r => r.id !== recordIdToDelete);
+                const targetId = recordIdToDelete;
+                records = records.filter(r => r.id !== targetId);
                 renderAll();
-                showToast('Catatan berhasil dihapus.', 'info');
+
+                // Hapus juga baris yang sama di Google Sheet jika terhubung
+                if (googleSheetWebhookUrl) {
+                    try {
+                        await fetch(googleSheetWebhookUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: 'delete', id: targetId })
+                        });
+                        showToast('Catatan dihapus dari website & Google Sheet.', 'info');
+                    } catch (e) {
+                        showToast('Catatan dihapus dari website.', 'info');
+                    }
+                } else {
+                    showToast('Catatan berhasil dihapus.', 'info');
+                }
             }
             closeDeleteModal();
         });
+
+        // Ekspor ke CSV (Cadangan Offline)
+        function exportToCSV() {
+            if (records.length === 0) {
+                showToast('Tidak ada data untuk diunduh.', 'warning');
+                return;
+            }
+            const headers = ['Tanggal', 'Keterangan', 'Pendapatan Harian (IDR)', 'Tunjangan Anak & Istri', 'Nafkah Istri', 'Perbaikan Kendaraan', 'Dana Mendesak'];
+            const rows = records.map(r => [
+                r.tanggal,
+                `"${String(r.keterangan).replace(/"/g, '""')}"`,
+                r.pendapatan,
+                r.tunjanganAnakIstri,
+                r.nafkahIstri,
+                r.perbaikanKendaraan,
+                r.danaMendesak
+            ]);
+
+            const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `keuangan_keluarga_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('File CSV berhasil diunduh!', 'success');
+        }
 
         // Toggle Dark Mode
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
 
+        // Helper Keamanan HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // Sistem Notifikasi Toast
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            
+
             const colors = {
                 success: 'bg-emerald-600 text-white',
                 error: 'bg-rose-600 text-white',
@@ -898,11 +1022,8 @@ function doGet(e) {
                 info: 'info'
             };
 
-            toast.className = `${colors[type]} px-4 py-3 rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-medium pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
-            toast.innerHTML = `
-                <i data-lucide="${icons[type]}" class="w-4 h-4 shrink-0"></i>
-                <span>${message}</span>
-            `;
+            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-lg text-xs font-medium flex items-center gap-2.5 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
+            toast.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 shrink-0"></i><span>${escapeHtml(message)}</span>`;
 
             container.appendChild(toast);
             lucide.createIcons();
