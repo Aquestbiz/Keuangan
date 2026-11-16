@@ -65,67 +65,101 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 animate-fade-in">
 
         <!-- Ringkasan Saldo 4 Pos Tabungan + Total Pendapatan -->
         <section>
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <h2 class="text-base font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                    <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-600"></i>
+                    <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-600 animate-spin-slow"></i>
                     Ringkasan Saldo Pos Tabungan (Real-Time)
                 </h2>
                 <div class="text-xs text-slate-500 dark:text-slate-400">
-                    Total Akumulasi Pendapatan: <span id="grandTotalIncome" class="font-bold text-slate-900 dark:text-white text-sm">Rp 0</span>
+                    Total Akumulasi Pendapatan: <span id="grandTotalIncome" class="font-bold text-slate-900 dark:text-white text-sm transition-all duration-300">Rp 0</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Pos 1: Tunjangan Anak dan Istri -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="p-2.5 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                            <i data-lucide="users" class="w-5 h-5"></i>
-                        </span>
-                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" id="pctPos1">0%</span>
+                <div class="group bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-500/5 dark:bg-blue-500/10 rounded-full group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 relative z-10">
+                            <span class="p-2.5 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 group-hover:rotate-12 transition-transform duration-300">
+                                <i data-lucide="users" class="w-5 h-5"></i>
+                            </span>
+                            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 shadow-sm" id="pctPos1">0%</span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Tunjangan Anak & Istri</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos1">Rp 0</h3>
                     </div>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Tunjangan Anak & Istri</p>
-                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos1">Rp 0</h3>
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
+                        <span class="text-[11px] text-slate-400">Pos Tabungan 1</span>
+                        <button type="button" onclick="openDirectWithdrawModal('tunjanganAnakIstri', 'Tunjangan Anak & Istri')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 transition flex items-center gap-1 shadow-sm">
+                            <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i>
+                            <span>Tarik Dana</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Pos 2: Nafkah Istri -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="p-2.5 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400">
-                            <i data-lucide="heart" class="w-5 h-5"></i>
-                        </span>
-                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300" id="pctPos2">0%</span>
+                <div class="group bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-rose-500/5 dark:bg-rose-500/10 rounded-full group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 relative z-10">
+                            <span class="p-2.5 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 group-hover:rotate-12 transition-transform duration-300">
+                                <i data-lucide="heart" class="w-5 h-5 fill-rose-100 dark:fill-rose-900/40"></i>
+                            </span>
+                            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 shadow-sm" id="pctPos2">0%</span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Nafkah Istri</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos2">Rp 0</h3>
                     </div>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Nafkah Istri</p>
-                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos2">Rp 0</h3>
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
+                        <span class="text-[11px] text-slate-400">Pos Tabungan 2</span>
+                        <button type="button" onclick="openDirectWithdrawModal('nafkahIstri', 'Nafkah Istri')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950 dark:hover:bg-rose-900 text-rose-600 dark:text-rose-300 transition flex items-center gap-1 shadow-sm">
+                            <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i>
+                            <span>Tarik Dana</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Pos 3: Kebutuhan Perbaikan Kendaraan -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="p-2.5 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
-                            <i data-lucide="wrench" class="w-5 h-5"></i>
-                        </span>
-                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300" id="pctPos3">0%</span>
+                <div class="group bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/5 dark:bg-amber-500/10 rounded-full group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 relative z-10">
+                            <span class="p-2.5 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 group-hover:rotate-45 transition-transform duration-300">
+                                <i data-lucide="wrench" class="w-5 h-5"></i>
+                            </span>
+                            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 shadow-sm" id="pctPos3">0%</span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Perbaikan Kendaraan</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos3">Rp 0</h3>
                     </div>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Perbaikan Kendaraan</p>
-                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos3">Rp 0</h3>
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
+                        <span class="text-[11px] text-slate-400">Pos Tabungan 3</span>
+                        <span class="text-[11px] text-slate-400 italic">Gunakan Form Bawah</span>
+                    </div>
                 </div>
 
                 <!-- Pos 4: Dana Mendesak -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-                            <i data-lucide="shield-alert" class="w-5 h-5"></i>
-                        </span>
-                        <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300" id="pctPos4">0%</span>
+                <div class="group bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3 relative z-10">
+                            <span class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="shield-check" class="w-5 h-5"></i>
+                            </span>
+                            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 shadow-sm" id="pctPos4">0%</span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Dana Mendesak</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos4">Rp 0</h3>
                     </div>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Dana Mendesak</p>
-                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos4">Rp 0</h3>
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
+                        <span class="text-[11px] text-slate-400">Pos Tabungan 4</span>
+                        <span class="text-[11px] text-slate-400 italic">Gunakan Form Bawah</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -133,135 +167,266 @@
         <!-- Form Input & Tabel Riwayat -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
             
-            <!-- Kolom Kiri: Form Pencatatan Harian -->
-            <section class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-5 sm:p-6">
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Catat Pendapatan Harian</h2>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Isi total pendapatan lalu bagi ke 4 kolom tabungan</p>
-                    </div>
-                    <button type="button" onclick="autoDistribute()" title="Bagi Otomatis Proporsional" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i>
-                        Bagi Otomatis
+            <!-- Kolom Kiri: Tombol Aksi & Form Pencatatan Harian / Penarikan Saldo -->
+            <section class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-5 sm:p-6 transition-all duration-300">
+                <!-- Navigasi Tab Pemasukan vs Penarikan (Default Tertutup) -->
+                <div class="grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-900/70">
+                    <button type="button" onclick="switchFormTab('income')" id="tabBtnIncome" class="py-2.5 px-3 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all duration-200 flex items-center justify-center gap-1.5 group">
+                        <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-600 group-hover:rotate-90 transition-transform duration-300"></i>
+                        <span>Catat Pemasukan</span>
+                    </button>
+                    <button type="button" onclick="switchFormTab('withdraw')" id="tabBtnWithdraw" class="py-2.5 px-3 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all duration-200 flex items-center justify-center gap-1.5 group">
+                        <i data-lucide="minus-circle" class="w-4 h-4 text-rose-500 group-hover:rotate-180 transition-transform duration-300"></i>
+                        <span>Tarik / Pakai Saldo</span>
                     </button>
                 </div>
 
-                <form id="financeForm" class="space-y-4">
-                    <!-- Tanggal & Catatan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Petunjuk Awal Saat Form Belum Dibuka -->
+                <div id="formPlaceholder" class="mt-4 py-8 px-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-center animate-pulse">
+                    <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center mx-auto mb-2">
+                        <i data-lucide="mouse-pointer-click" class="w-5 h-5"></i>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        Klik tombol <strong class="text-emerald-600 dark:text-emerald-400">Catat Pemasukan</strong> atau <strong class="text-rose-600 dark:text-rose-400">Tarik / Pakai Saldo</strong> di atas untuk membuka formulir.
+                    </p>
+                </div>
+
+                <!-- PANEL 1: FORM PEMASUKAN HARIAN -->
+                <div id="panelIncome" class="hidden mt-5 pt-5 border-t border-slate-200 dark:border-slate-700 animate-slide-down">
+                    <div class="flex items-start justify-between gap-2 mb-5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50">
+                                <i data-lucide="wallet-cards" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900 dark:text-white">Catat Pendapatan Harian</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Distribusi otomatis ke 4 pos tabungan</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button type="button" onclick="autoDistribute()" title="Bagi Otomatis Proporsional" class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 transition flex items-center gap-1 group">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600 group-hover:rotate-12 transition-transform"></i>
+                                <span>Bagi Otomatis</span>
+                            </button>
+                            <button type="button" onclick="closeFormPanel()" title="Tutup Bagian Ini" class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 transition flex items-center gap-1">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                <span>Tutup</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="financeForm" class="space-y-4">
+                        <!-- Tanggal & Catatan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> Tanggal
+                                </label>
+                                <input type="date" id="inputDate" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+                                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i> Keterangan
+                                </label>
+                                <input type="text" id="inputNote" placeholder="Contoh: Gaji / Usaha" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+                            </div>
+                        </div>
+
+                        <!-- Total Pendapatan Perhari -->
+                        <div class="p-4 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 shadow-inner">
+                            <label class="block text-xs font-semibold text-emerald-800 dark:text-emerald-300 mb-1.5 flex items-center gap-1.5">
+                                <i data-lucide="banknote" class="w-4 h-4 text-emerald-600"></i> Jumlah Pendapatan Hari Ini (IDR)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sm font-bold text-emerald-700 dark:text-emerald-400">Rp</span>
+                                <input type="text" inputmode="numeric" id="inputTotalIncome" placeholder="0" required class="idr-input w-full pl-10 pr-4 py-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-900 text-base font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition">
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-600"></i> Pembagian 4 Pos Tabungan
+                                </span>
+                                <span id="remainingIndicator" class="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm">Sisa: Rp 0</span>
+                            </div>
+
+                            <div class="space-y-3">
+                                <!-- 1. Tunjangan Anak dan Istri -->
+                                <div>
+                                    <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5 text-blue-500"></i> 1. Tunjangan Anak dan Istri</span>
+                                        <span class="text-slate-400 text-[11px]">Saran: 40%</span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
+                                        <input type="text" inputmode="numeric" id="inputPos1" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition">
+                                    </div>
+                                </div>
+
+                                <!-- 2. Nafkah Istri -->
+                                <div>
+                                    <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="heart" class="w-3.5 h-3.5 text-rose-500"></i> 2. Nafkah Istri</span>
+                                        <span class="text-slate-400 text-[11px]">Saran: 25%</span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
+                                        <input type="text" inputmode="numeric" id="inputPos2" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition">
+                                    </div>
+                                </div>
+
+                                <!-- 3. Kebutuhan Perbaikan Kendaraan -->
+                                <div>
+                                    <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="wrench" class="w-3.5 h-3.5 text-amber-500"></i> 3. Kebutuhan Perbaikan Kendaraan</span>
+                                        <span class="text-slate-400 text-[11px]">Saran: 15%</span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
+                                        <input type="text" inputmode="numeric" id="inputPos3" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-amber-500 outline-none transition">
+                                    </div>
+                                </div>
+
+                                <!-- 4. Dana Mendesak -->
+                                <div>
+                                    <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> 4. Dana Mendesak</span>
+                                        <span class="text-slate-400 text-[11px]">Saran: 20%</span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
+                                        <input type="text" inputmode="numeric" id="inputPos4" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-emerald-500 outline-none transition">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pesan Validasi / Peringatan Selisih -->
+                        <div id="allocationAlert" class="hidden p-3 rounded-xl text-xs bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800 flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+                            <span>Total pembagian 4 pos belum sama dengan jumlah pendapatan hari ini.</span>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold text-sm shadow-md shadow-emerald-600/20 hover:shadow-lg transition-all flex items-center justify-center gap-2 group">
+                            <i data-lucide="save" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                            <span>Simpan Pemasukan ke Database</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- PANEL 2: FORM PENARIKAN / PENGURANGAN SALDO -->
+                <div id="panelWithdraw" class="hidden mt-5 pt-5 border-t border-slate-200 dark:border-slate-700 animate-slide-down">
+                    <div class="flex items-start justify-between gap-2 mb-5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-900/50">
+                                <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900 dark:text-white">Penarikan / Penggunaan Saldo</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Kurangi saldo dari pos tabungan terpilih</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="closeFormPanel()" title="Tutup Bagian Ini" class="shrink-0 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 transition flex items-center gap-1">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                            <span>Tutup</span>
+                        </button>
+                    </div>
+
+                    <form id="withdrawForm" class="space-y-4">
+                        <!-- Tanggal & Keperluan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> Tanggal
+                                </label>
+                                <input type="date" id="withdrawDate" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+                                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i> Keperluan
+                                </label>
+                                <input type="text" id="withdrawNote" placeholder="Contoh: Servis Motor / Berobat" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition">
+                            </div>
+                        </div>
+
+                        <!-- Pilih Pos Sumber Dana -->
                         <div>
-                            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Tanggal</label>
-                            <input type="date" id="inputDate" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Keterangan (Opsional)</label>
-                            <input type="text" id="inputNote" placeholder="Contoh: Gaji / Hasil Usaha" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
-                        </div>
-                    </div>
-
-                    <!-- Total Pendapatan Perhari -->
-                    <div class="p-4 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60">
-                        <label class="block text-xs font-semibold text-emerald-800 dark:text-emerald-300 mb-1.5">Jumlah Pendapatan Hari Ini (IDR)</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sm font-bold text-emerald-700 dark:text-emerald-400">Rp</span>
-                            <input type="text" inputmode="numeric" id="inputTotalIncome" placeholder="0" required class="idr-input w-full pl-10 pr-4 py-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-900 text-base font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none transition">
-                        </div>
-                    </div>
-
-                    <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pembagian 4 Pos Tabungan</span>
-                            <span id="remainingIndicator" class="text-xs font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Sisa: Rp 0</span>
-                        </div>
-
-                        <div class="space-y-3">
-                            <!-- 1. Tunjangan Anak dan Istri -->
-                            <div>
-                                <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                    <span>1. Tunjangan Anak dan Istri</span>
-                                    <span class="text-slate-400 text-[11px]">Saran: 40%</span>
-                                </label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
-                                    <input type="text" inputmode="numeric" id="inputPos1" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none transition">
-                                </div>
-                            </div>
-
-                            <!-- 2. Nafkah Istri -->
-                            <div>
-                                <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                    <span>2. Nafkah Istri</span>
-                                    <span class="text-slate-400 text-[11px]">Saran: 25%</span>
-                                </label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
-                                    <input type="text" inputmode="numeric" id="inputPos2" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition">
-                                </div>
-                            </div>
-
-                            <!-- 3. Kebutuhan Perbaikan Kendaraan -->
-                            <div>
-                                <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                    <span>3. Kebutuhan Perbaikan Kendaraan</span>
-                                    <span class="text-slate-400 text-[11px]">Saran: 15%</span>
-                                </label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
-                                    <input type="text" inputmode="numeric" id="inputPos3" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-amber-500 outline-none transition">
-                                </div>
-                            </div>
-
-                            <!-- 4. Dana Mendesak -->
-                            <div>
-                                <label class="flex justify-between text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                    <span>4. Dana Mendesak</span>
-                                    <span class="text-slate-400 text-[11px]">Saran: 20%</span>
-                                </label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-xs font-semibold text-slate-400">Rp</span>
-                                    <input type="text" inputmode="numeric" id="inputPos4" placeholder="0" class="idr-input pos-input w-full pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-semibold focus:ring-2 focus:ring-emerald-500 outline-none transition">
-                                </div>
+                            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1">
+                                <i data-lucide="folder-output" class="w-3.5 h-3.5 text-rose-500"></i> Ambil Dari Pos Tabungan
+                            </label>
+                            <select id="withdrawCategory" onchange="updateAvailableBalancePreview()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm font-medium focus:ring-2 focus:ring-rose-500 outline-none transition">
+                                <option value="tunjanganAnakIstri">1. Tunjangan Anak dan Istri</option>
+                                <option value="nafkahIstri">2. Nafkah Istri</option>
+                                <option value="perbaikanKendaraan">3. Kebutuhan Perbaikan Kendaraan</option>
+                                <option value="danaMendesak" selected>4. Dana Mendesak</option>
+                            </select>
+                            <div class="mt-2 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/70 text-xs">
+                                <span class="text-slate-500 dark:text-slate-400">Saldo Tersedia di Pos Ini:</span>
+                                <span id="availablePosBalance" class="font-bold text-slate-900 dark:text-white">Rp 0</span>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Pesan Validasi / Peringatan Selisih -->
-                    <div id="allocationAlert" class="hidden p-3 rounded-xl text-xs bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
-                        Total pembagian 4 pos belum sama dengan jumlah pendapatan hari ini.
-                    </div>
+                        <!-- Nominal Penarikan -->
+                        <div class="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 shadow-inner">
+                            <label class="block text-xs font-semibold text-rose-800 dark:text-rose-300 mb-1.5 flex items-center gap-1.5">
+                                <i data-lucide="coins" class="w-4 h-4 text-rose-600"></i> Nominal Saldo yang Ditarik (IDR)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sm font-bold text-rose-700 dark:text-rose-400">Rp</span>
+                                <input type="text" inputmode="numeric" id="withdrawAmount" placeholder="0" required class="idr-input w-full pl-10 pr-4 py-2.5 rounded-xl border border-rose-300 dark:border-rose-700 bg-white dark:bg-slate-900 text-base font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none transition">
+                            </div>
+                        </div>
 
-                    <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold text-sm shadow-sm shadow-emerald-600/20 transition flex items-center justify-center gap-2">
-                        <i data-lucide="save" class="w-4 h-4"></i>
-                        <span>Simpan ke Database & Google Sheet</span>
-                    </button>
-                </form>
+                        <!-- Peringatan Jika Melebihi Saldo Pos -->
+                        <div id="withdrawAlert" class="hidden p-3 rounded-xl text-xs bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800 flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
+                            <span>Perhatian: Nominal penarikan melebihi saldo tersedia pada pos ini (saldo akan menjadi minus).</span>
+                        </div>
+
+                        <button type="submit" id="withdrawSubmitBtn" class="w-full py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-semibold text-sm shadow-md shadow-rose-600/20 hover:shadow-lg transition-all flex items-center justify-center gap-2 group">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                            <span>Catat Penarikan & Kurangi Saldo</span>
+                        </button>
+                    </form>
+                </div>
             </section>
 
             <!-- Kolom Kanan: Tabel Riwayat Real-Time -->
             <section class="lg:col-span-7 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col">
-                <div class="p-5 sm:p-6 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Riwayat Pencatatan Real-Time</h2>
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Live
-                            </span>
+                <div class="p-5 sm:p-6 border-b border-slate-200 dark:border-slate-700 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30">
+                            <i data-lucide="history" class="w-5 h-5"></i>
                         </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Data langsung tampil saat disimpan & tersinkron ke spreadsheet</p>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Riwayat Pencatatan Real-Time</h2>
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Live
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Sinkronisasi instan dengan Google Sheets</p>
+                        </div>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        <button onclick="syncFromGoogleSheet(true)" id="syncNowBtn" class="px-3 py-2 rounded-xl text-xs font-medium bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition flex items-center gap-1.5" title="Tarik data terbaru dari Google Sheet">
-                            <i data-lucide="refresh-cw" id="syncIcon" class="w-3.5 h-3.5"></i>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="filterTypeSelect" onchange="renderAll()" class="px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 outline-none transition cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600">
+                            <option value="all">Semua Transaksi</option>
+                            <option value="income">Pemasukan (+)</option>
+                            <option value="withdraw">Penarikan (-)</option>
+                        </select>
+                        <button onclick="syncFromGoogleSheet(true)" id="syncNowBtn" class="px-3 py-2 rounded-xl text-xs font-medium bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition flex items-center gap-1.5 group" title="Tarik data terbaru dari Google Sheet">
+                            <i data-lucide="refresh-cw" id="syncIcon" class="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500"></i>
                             <span class="hidden sm:inline">Sinkronkan</span>
                         </button>
-                        <button onclick="exportToCSV()" class="px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <button onclick="exportToCSV()" class="px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5 group">
+                            <i data-lucide="download" class="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform"></i>
                             <span class="hidden sm:inline">Unduh CSV</span>
                         </button>
-                        <button onclick="openSetupModal()" class="px-3 py-2 rounded-xl text-xs font-medium bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 transition flex items-center gap-1.5">
-                            <i data-lucide="sheet" class="w-3.5 h-3.5"></i>
-                            Hubungkan Sheet
+                        <button onclick="openSetupModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 transition flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                            <span>Hubungkan Sheet</span>
                         </button>
                     </div>
                 </div>
@@ -272,7 +437,7 @@
                         <thead>
                             <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                 <th class="py-3.5 px-4">Tanggal & Ket</th>
-                                <th class="py-3.5 px-4 text-right">Pendapatan</th>
+                                <th class="py-3.5 px-4 text-right">Mutasi Total</th>
                                 <th class="py-3.5 px-4 text-right">Tunj. Anak & Istri</th>
                                 <th class="py-3.5 px-4 text-right">Nafkah Istri</th>
                                 <th class="py-3.5 px-4 text-right">Kendaraan</th>
@@ -288,8 +453,8 @@
                 </div>
 
                 <!-- Empty State -->
-                <div id="emptyState" class="hidden py-12 px-4 text-center">
-                    <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-700 text-slate-400 mx-auto flex items-center justify-center mb-3">
+                <div id="emptyState" class="hidden py-12 px-4 text-center animate-fade-in">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 mx-auto flex items-center justify-center mb-3 shadow-sm">
                         <i data-lucide="inbox" class="w-6 h-6"></i>
                     </div>
                     <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Belum ada catatan keuangan</h3>
@@ -327,7 +492,7 @@
                         URL Web App Google Apps Script Anda:
                     </label>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="url" id="webhookUrlInput" placeholder="https://script.google.com/macros/s/AKfycbwBe70Ub2gfpMRjrwBQtuRjMeWi4DpCRV7vuDdXEuTeLKLfbINKbeQ4tfhri1MwwBM/exec" class="flex-grow px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+                        <input type="url" id="webhookUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
                         <button onclick="saveWebhookUrl()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition whitespace-nowrap">
                             Simpan URL
                         </button>
@@ -360,12 +525,28 @@
   // Jika aksi adalah hapus data dari web
   if (payload.action === "delete" && payload.id) {
     var rows = sheet.getDataRange().getValues();
+    var targetId = String(payload.id);
+    var deleted = false;
+
     for (var i = rows.length - 1; i >= 1; i--) {
-      if (String(rows[i][8]) === String(payload.id)) {
+      var rowId = rows[i][8] ? String(rows[i][8]) : ("sheet-row-" + i);
+      if (rowId === targetId) {
         sheet.deleteRow(i + 1);
+        deleted = true;
         break;
       }
     }
+
+    // Cadangan pencocokan berdasarkan keterangan & nominal jika ID tidak ditemukan
+    if (!deleted && payload.keterangan) {
+      for (var j = rows.length - 1; j >= 1; j--) {
+        if (String(rows[j][1]) === String(payload.keterangan) && Number(rows[j][2]) === Number(payload.pendapatan)) {
+          sheet.deleteRow(j + 1);
+          break;
+        }
+      }
+    }
+
     return ContentService.createTextOutput(JSON.stringify({ "status": "deleted" }))
       .setMimeType(ContentService.MimeType.JSON);
   }
@@ -385,7 +566,9 @@
     ];
     sheet.appendRow(headers);
     var headerRange = sheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground("#059669").setFontColor("#ffffff").setFontWeight("bold");
+    headerRange.setBackground("#059669");
+    headerRange.setFontColor("#ffffff");
+    headerRange.setFontWeight("bold");
     sheet.setFrozenRows(1);
   }
   
@@ -398,12 +581,11 @@
     Number(payload.perbaikanKendaraan) || 0,
     Number(payload.danaMendesak) || 0,
     new Date().toLocaleString("id-ID"),
-    payload.id || ("rec-" + new Date().getTime())
+    payload.id || ""
   ]);
-  
+
   var lastRow = sheet.getLastRow();
   sheet.getRange(lastRow, 3, 1, 5).setNumberFormat('"Rp "#,##0');
-  sheet.autoResizeColumns(1, 9);
   
   return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
     .setMimeType(ContentService.MimeType.JSON);
@@ -414,7 +596,7 @@ function doGet(e) {
   var sheet = ss.getActiveSheet();
   var rows = sheet.getDataRange().getValues();
   var result = [];
-  
+
   var summary = {
     totalPendapatan: 0,
     tunjanganAnakIstri: 0,
@@ -424,31 +606,42 @@ function doGet(e) {
   };
   
   for (var i = 1; i < rows.length; i++) {
-    // Lewati baris kosong atau baris tulisan "TOTAL" jika ada di sheet
-    var firstCol = String(rows[i][0] || "").trim().toUpperCase();
-    if ((!rows[i][0] && !rows[i][2]) || firstCol === "TOTAL" || firstCol === "JUMLAH") continue;
-    
-    var pend = Number(rows[i][2]) || 0;
-    var tunj = Number(rows[i][3]) || 0;
-    var nafk = Number(rows[i][4]) || 0;
-    var kend = Number(rows[i][5]) || 0;
-    var mend = Number(rows[i][6]) || 0;
-    
-    summary.totalPendapatan += pend;
-    summary.tunjanganAnakIstri += tunj;
-    summary.nafkahIstri += nafk;
-    summary.perbaikanKendaraan += kend;
-    summary.danaMendesak += mend;
-    
+    var rawDate = rows[i][0];
+    var ket = String(rows[i][1] || "");
+    if (!rawDate && !ket) continue;
+
+    // Abaikan baris ringkasan/total manual jika user mengetik TOTAL di dalam sheet
+    var upperCheck = (String(rawDate) + " " + ket).toUpperCase();
+    if (upperCheck.indexOf("TOTAL") !== -1 || upperCheck.indexOf("JUMLAH") !== -1) {
+      continue;
+    }
+
+    var formattedDate = rawDate instanceof Date 
+      ? Utilities.formatDate(rawDate, Session.getScriptTimeZone(), "yyyy-MM-dd") 
+      : String(rawDate);
+
+    var p = Number(rows[i][2]) || 0;
+    var t1 = Number(rows[i][3]) || 0;
+    var t2 = Number(rows[i][4]) || 0;
+    var t3 = Number(rows[i][5]) || 0;
+    var t4 = Number(rows[i][6]) || 0;
+
+    summary.totalPendapatan += p;
+    summary.tunjanganAnakIstri += t1;
+    summary.nafkahIstri += t2;
+    summary.perbaikanKendaraan += t3;
+    summary.danaMendesak += t4;
+
     result.push({
       id: rows[i][8] ? String(rows[i][8]) : ("sheet-row-" + i),
-      tanggal: rows[i][0],
-      keterangan: rows[i][1],
-      pendapatan: pend,
-      tunjanganAnakIstri: tunj,
-      nafkahIstri: nafk,
-      perbaikanKendaraan: kend,
-      danaMendesak: mend
+      tanggal: formattedDate,
+      keterangan: ket,
+      pendapatan: p,
+      tunjanganAnakIstri: t1,
+      nafkahIstri: t2,
+      perbaikanKendaraan: t3,
+      danaMendesak: t4,
+      synced: true
     });
   }
   
@@ -460,153 +653,198 @@ function doGet(e) {
                     </div>
 
                     <ol start="4" class="list-decimal list-inside space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        <li>Klik tombol <strong>Terapkan (Deploy)</strong> &rarr; <strong>Deployment baru (New deployment)</strong>.</li>
-                        <li>Pilih jenis: <strong>Aplikasi Web (Web app)</strong>. Pada bagian <em>"Yang memiliki akses (Who has access)"</em> pilih <strong>Siapa saja (Anyone)</strong>.</li>
-                        <li>Klik <strong>Terapkan (Deploy)</strong>, berikan izin akses akun, lalu salin <strong>URL Aplikasi Web</strong> dan tempelkan pada kolom di atas.</li>
+                        <li>Klik ikon <strong>Simpan (Save)</strong>, lalu klik tombol biru <strong>Terapkan (Deploy)</strong> &rarr; <strong>Deployment baru (New deployment)</strong>.</li>
+                        <li>Pilih jenis: <strong>Aplikasi Web (Web app)</strong>.</li>
+                        <li>Pada bagian <em>"Yang memiliki akses (Who has access)"</em>, ubah menjadi <strong>Siapa saja (Anyone)</strong>, lalu klik <strong>Terapkan</strong> dan izinkan akses akun Google Anda.</li>
+                        <li>Salin <strong>URL Aplikasi Web</strong> yang muncul, lalu tempelkan ke kotak di atas!</li>
                     </ol>
                 </div>
             </div>
 
             <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700 flex justify-end">
-                <button onclick="closeSetupModal()" class="px-5 py-2 rounded-xl bg-slate-800 dark:bg-slate-700 text-white text-xs font-semibold hover:opacity-90 transition">
-                    Tutup
+                <button onclick="closeSetupModal()" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-medium text-xs transition">
+                    Tutup Jendela
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Hapus (Pengganti confirm() bawaan browser) -->
+    <!-- Modal Konfirmasi Hapus -->
     <div id="deleteModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-700 shadow-xl space-y-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full border border-slate-200 dark:border-slate-700 shadow-xl p-5 space-y-4">
             <div class="flex items-center gap-3 text-rose-600">
-                <div class="p-2 rounded-xl bg-rose-100 dark:bg-rose-900/30">
+                <div class="p-2.5 rounded-xl bg-rose-100 dark:bg-rose-900/30">
                     <i data-lucide="trash-2" class="w-5 h-5"></i>
                 </div>
                 <h3 class="font-bold text-base text-slate-900 dark:text-white">Hapus Catatan Ini?</h3>
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Catatan ini akan dihapus dari tampilan aplikasi saat ini. Saldo ringkasan akan otomatis disesuaikan kembali.
+                Catatan ini akan dihapus permanen dari website dan baris yang sesuai di <strong>Google Sheet</strong> Anda. Saldo ringkasan akan otomatis disesuaikan kembali.
             </p>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
                     Batal
                 </button>
-                <button id="confirmDeleteBtn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition">
-                    Ya, Hapus
+                <button type="button" id="confirmDeleteBtn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1.5">
+                    <span>Ya, Hapus</span>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Modal Tarik Dana Langsung (Tunjangan Anak & Istri / Nafkah Istri) -->
+    <div id="directWithdrawModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden p-6 space-y-4 animate-slide-down">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-xl bg-rose-100 text-rose-700 dark:bg-rose-900/50">
+                        <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-white" id="modalTitleCategory">Tarik Dana</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Pengurangan saldo pos tabungan</p>
+                    </div>
+                </div>
+                <button onclick="closeDirectWithdrawModal()" class="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="directWithdrawForm" class="space-y-4">
+                <input type="hidden" id="directWithdrawCategoryKey">
+                
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Tanggal</label>
+                    <input type="date" id="directWithdrawDate" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-rose-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Keterangan / Keperluan</label>
+                    <input type="text" id="directWithdrawNote" placeholder="Contoh: Belanja Bulanan / Keperluan Anak" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-rose-500 outline-none">
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900/60 flex items-center justify-between text-xs">
+                    <span class="text-slate-500 dark:text-slate-400">Saldo Tersedia:</span>
+                    <span id="directAvailableBalance" class="font-bold text-slate-900 dark:text-white">Rp 0</span>
+                </div>
+
+                <div class="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60">
+                    <label class="block text-xs font-semibold text-rose-800 dark:text-rose-300 mb-1.5">Jumlah Penarikan (IDR)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sm font-bold text-rose-700">Rp</span>
+                        <input type="text" inputmode="numeric" id="directWithdrawAmount" placeholder="0" required class="idr-input w-full pl-10 pr-4 py-2.5 rounded-xl border border-rose-300 dark:border-rose-700 bg-white dark:bg-slate-900 text-base font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeDirectWithdrawModal()" class="px-4 py-2.5 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition">
+                        Batal
+                    </button>
+                    <button type="submit" id="directWithdrawSubmitBtn" class="px-5 py-2.5 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1.5">
+                        <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+                        <span>Konfirmasi Tarik</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Inisialisasi State Aplikasi (In-Memory State sesuai aturan tanpa localStorage)
-        let records = [
-            {
-                id: 'demo-1',
-                tanggal: new Date().toISOString().split('T')[0],
-                keterangan: 'Pendapatan Harian (Contoh)',
-                pendapatan: 0,
-                tunjanganAnakIstri: 0,
-                nafkahIstri: 0,
-                perbaikanKendaraan: 0,
-                danaMendesak: 0,
-                synced: false
-            }
-        ];
+        // Inisialisasi State Aplikasi (Mulai dari 0)
         let googleSheetWebhookUrl = '';
-        let sheetSummary = null; // Menyimpan ringkasan saldo langsung dari Google Sheet
+        let sheetSummary = null;
+        let records = [];
+        let activeFormTab = null;
         let recordIdToDelete = null;
         let autoSyncInterval = null;
 
-        // Inisialisasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            document.getElementById('inputDate').valueAsDate = new Date();
-            setupCurrencyInputs();
-            renderAll();
-        });
-
-        // Format Angka ke IDR (Rupiah)
-        function formatIDR(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount || 0);
-        }
-
-        // Format angka dengan pemisah ribuan titik untuk input field
+        // Format Angka ke Format Mata Uang IDR (Input)
         function formatNumberInput(value) {
-            const numeric = String(value).replace(/\D/g, '');
-            if (!numeric) return '';
-            return new Intl.NumberFormat('id-ID').format(parseInt(numeric, 10));
+            const numericString = String(value).replace(/\D/g, '');
+            if (!numericString) return '';
+            return new Intl.NumberFormat('id-ID').format(parseInt(numericString, 10));
         }
 
-        // Ambil nilai integer dari input berformat IDR
-        function parseIDRInput(elementId) {
-            const el = document.getElementById(elementId);
-            if (!el) return 0;
-            const raw = el.value.replace(/\D/g, '');
-            return raw ? parseInt(raw, 10) : 0;
+        // Parse string berformat titik (1.000.000) menjadi Number
+        function parseIDRInput(formattedStr) {
+            if (!formattedStr) return 0;
+            const clean = String(formattedStr).replace(/\./g, '').replace(/[^0-9-]/g, '');
+            return parseInt(clean, 10) || 0;
         }
 
-        // Pasang event listener auto-format pada seluruh input mata uang
-        function setupCurrencyInputs() {
-            const inputs = document.querySelectorAll('.idr-input');
-            inputs.forEach(input => {
-                input.addEventListener('input', (e) => {
-                    e.target.value = formatNumberInput(e.target.value);
-                    calculateRemaining();
-                });
-            });
+        // Format Number ke Teks Rupiah Lengkap (mendukung nilai negatif/penarikan)
+        function formatIDR(amount) {
+            const num = Number(amount) || 0;
+            const prefix = num < 0 ? '-Rp ' : 'Rp ';
+            return prefix + new Intl.NumberFormat('id-ID').format(Math.abs(num));
         }
 
-        // Hitung sisa pendapatan yang belum dialokasikan ke 4 pos
+        // Format Tanggal ke Bahasa Indonesia
+        function formatDateIndo(dateStr) {
+            if (!dateStr) return '-';
+            const parts = String(dateStr).split('-');
+            if (parts.length !== 3) return dateStr;
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const mIndex = parseInt(parts[1], 10) - 1;
+            return `${parts[2]} ${months[mIndex] || parts[1]} ${parts[0]}`;
+        }
+
+        // Escape HTML untuk mencegah XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Hitung Sisa Alokasi Secara Real-Time saat Mengetik
         function calculateRemaining() {
-            const totalIncome = parseIDRInput('inputTotalIncome');
-            const pos1 = parseIDRInput('inputPos1');
-            const pos2 = parseIDRInput('inputPos2');
-            const pos3 = parseIDRInput('inputPos3');
-            const pos4 = parseIDRInput('inputPos4');
+            const total = parseIDRInput(document.getElementById('inputTotalIncome').value);
+            const p1 = parseIDRInput(document.getElementById('inputPos1').value);
+            const p2 = parseIDRInput(document.getElementById('inputPos2').value);
+            const p3 = parseIDRInput(document.getElementById('inputPos3').value);
+            const p4 = parseIDRInput(document.getElementById('inputPos4').value);
 
-            const allocated = pos1 + pos2 + pos3 + pos4;
-            const remaining = totalIncome - allocated;
-
+            const allocated = p1 + p2 + p3 + p4;
+            const remaining = total - allocated;
             const indicator = document.getElementById('remainingIndicator');
             const alertBox = document.getElementById('allocationAlert');
 
-            indicator.textContent = `Sisa: ${formatIDR(remaining)}`;
-
-            if (totalIncome > 0 && remaining === 0) {
-                indicator.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300';
+            if (remaining === 0 && total > 0) {
+                indicator.textContent = 'Pas (100% Terbagi)';
+                indicator.className = 'text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 shadow-sm';
                 alertBox.classList.add('hidden');
+            } else if (remaining > 0) {
+                indicator.textContent = `Sisa: ${formatIDR(remaining)}`;
+                indicator.className = 'text-xs font-medium px-2.5 py-1 rounded-md bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 shadow-sm';
+                if (allocated > 0) alertBox.classList.remove('hidden');
             } else if (remaining < 0) {
-                indicator.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-md bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300';
-                alertBox.textContent = `Perhatian: Total pembagian melebihi pendapatan sebesar ${formatIDR(Math.abs(remaining))}.`;
-                alertBox.classList.remove('hidden');
-            } else if (totalIncome > 0 && remaining > 0) {
-                indicator.className = 'text-xs font-medium px-2.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300';
+                indicator.textContent = `Lebih: ${formatIDR(Math.abs(remaining))}`;
+                indicator.className = 'text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 shadow-sm';
                 alertBox.classList.add('hidden');
             } else {
-                indicator.className = 'text-xs font-medium px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
+                indicator.textContent = 'Sisa: Rp 0';
+                indicator.className = 'text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
                 alertBox.classList.add('hidden');
             }
         }
 
-        // Bagi Otomatis berdasarkan proporsi default (40%, 25%, 15%, 20%)
+        // Bagi Otomatis Berdasarkan Persentase Ideal (40%, 25%, 15%, 20%)
         function autoDistribute() {
-            const totalIncome = parseIDRInput('inputTotalIncome');
-            if (totalIncome <= 0) {
+            const total = parseIDRInput(document.getElementById('inputTotalIncome').value);
+            if (total <= 0) {
                 showToast('Masukkan jumlah pendapatan hari ini terlebih dahulu.', 'warning');
                 document.getElementById('inputTotalIncome').focus();
                 return;
             }
 
-            const p1 = Math.round(totalIncome * 0.40);
-            const p2 = Math.round(totalIncome * 0.25);
-            const p3 = Math.round(totalIncome * 0.15);
-            const p4 = totalIncome - (p1 + p2 + p3); // Sisa presisi masuk ke Dana Mendesak
+            const p1 = Math.round(total * 0.40);
+            const p2 = Math.round(total * 0.25);
+            const p3 = Math.round(total * 0.15);
+            const p4 = total - (p1 + p2 + p3);
 
             document.getElementById('inputPos1').value = formatNumberInput(p1);
             document.getElementById('inputPos2').value = formatNumberInput(p2);
@@ -614,75 +852,324 @@ function doGet(e) {
             document.getElementById('inputPos4').value = formatNumberInput(p4);
 
             calculateRemaining();
-            showToast('Pendapatan berhasil dibagi otomatis ke 4 pos!', 'info');
+            showToast('Pendapatan berhasil dibagi otomatis ke 4 pos!', 'success');
         }
 
-        // Submit Form Pencatatan Harian
-        document.getElementById('financeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Hitung Saldo Saat Ini untuk Setiap Pos
+        function getCurrentBalances() {
+            if (sheetSummary && googleSheetWebhookUrl) {
+                return {
+                    totalIncome: Number(sheetSummary.totalPendapatan) || 0,
+                    pos1: Number(sheetSummary.tunjanganAnakIstri) || 0,
+                    pos2: Number(sheetSummary.nafkahIstri) || 0,
+                    pos3: Number(sheetSummary.perbaikanKendaraan) || 0,
+                    pos4: Number(sheetSummary.danaMendesak) || 0
+                };
+            }
+            return records.reduce((acc, item) => {
+                acc.totalIncome += Number(item.pendapatan) || 0;
+                acc.pos1 += Number(item.tunjanganAnakIstri) || 0;
+                acc.pos2 += Number(item.nafkahIstri) || 0;
+                acc.pos3 += Number(item.perbaikanKendaraan) || 0;
+                acc.pos4 += Number(item.danaMendesak) || 0;
+                return acc;
+            }, { totalIncome: 0, pos1: 0, pos2: 0, pos3: 0, pos4: 0 });
+        }
 
-            const tanggal = document.getElementById('inputDate').value;
-            const keterangan = document.getElementById('inputNote').value.trim() || 'Pendapatan Harian';
-            const pendapatan = parseIDRInput('inputTotalIncome');
-            const tunjanganAnakIstri = parseIDRInput('inputPos1');
-            const nafkahIstri = parseIDRInput('inputPos2');
-            const perbaikanKendaraan = parseIDRInput('inputPos3');
-            const danaMendesak = parseIDRInput('inputPos4');
+        // Pratinjau Saldo Tersedia di Form Penarikan
+        function updateAvailableBalancePreview() {
+            const cat = document.getElementById('withdrawCategory').value;
+            const balances = getCurrentBalances();
+            const map = {
+                tunjanganAnakIstri: balances.pos1,
+                nafkahIstri: balances.pos2,
+                perbaikanKendaraan: balances.pos3,
+                danaMendesak: balances.pos4
+            };
+            const available = map[cat] || 0;
+            document.getElementById('availablePosBalance').textContent = formatIDR(available);
 
-            if (pendapatan <= 0) {
-                showToast('Jumlah pendapatan hari ini harus lebih dari Rp 0.', 'error');
+            const amountInput = document.getElementById('withdrawAmount');
+            const amount = parseIDRInput(amountInput ? amountInput.value : 0);
+            const alertEl = document.getElementById('withdrawAlert');
+            if (amount > available && amount > 0) {
+                alertEl.classList.remove('hidden');
+            } else {
+                alertEl.classList.add('hidden');
+            }
+        }
+
+        // Buka / Tutup Tab Form Pemasukan & Penarikan
+        function switchFormTab(tab) {
+            if (activeFormTab === tab) {
+                closeFormPanel();
+                return;
+            }
+            activeFormTab = tab;
+            const placeholder = document.getElementById('formPlaceholder');
+            const panelIncome = document.getElementById('panelIncome');
+            const panelWithdraw = document.getElementById('panelWithdraw');
+            const btnIncome = document.getElementById('tabBtnIncome');
+            const btnWithdraw = document.getElementById('tabBtnWithdraw');
+
+            placeholder.classList.add('hidden');
+
+            if (tab === 'income') {
+                panelIncome.classList.remove('hidden');
+                panelWithdraw.classList.add('hidden');
+                btnIncome.className = 'py-2.5 px-3 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 shadow-md transition-all flex items-center justify-center gap-1.5';
+                btnWithdraw.className = 'py-2.5 px-3 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all flex items-center justify-center gap-1.5';
+            } else {
+                panelWithdraw.classList.remove('hidden');
+                panelIncome.classList.add('hidden');
+                btnWithdraw.className = 'py-2.5 px-3 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 shadow-md transition-all flex items-center justify-center gap-1.5';
+                btnIncome.className = 'py-2.5 px-3 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all flex items-center justify-center gap-1.5';
+                updateAvailableBalancePreview();
+            }
+            lucide.createIcons();
+        }
+
+        function closeFormPanel() {
+            activeFormTab = null;
+            document.getElementById('panelIncome').classList.add('hidden');
+            document.getElementById('panelWithdraw').classList.add('hidden');
+            document.getElementById('formPlaceholder').classList.remove('hidden');
+
+            const defaultBtnClass = 'py-2.5 px-3 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all flex items-center justify-center gap-1.5';
+            document.getElementById('tabBtnIncome').className = defaultBtnClass;
+            document.getElementById('tabBtnWithdraw').className = defaultBtnClass;
+        }
+
+        // Render Ringkasan Saldo & Tabel Riwayat
+        function renderAll() {
+            const balances = getCurrentBalances();
+            document.getElementById('grandTotalIncome').textContent = formatIDR(balances.totalIncome);
+            document.getElementById('totalPos1').textContent = formatIDR(balances.pos1);
+            document.getElementById('totalPos2').textContent = formatIDR(balances.pos2);
+            document.getElementById('totalPos3').textContent = formatIDR(balances.pos3);
+            document.getElementById('totalPos4').textContent = formatIDR(balances.pos4);
+
+            const sumPos = Math.max(0, balances.pos1) + Math.max(0, balances.pos2) + Math.max(0, balances.pos3) + Math.max(0, balances.pos4);
+            document.getElementById('pctPos1').textContent = sumPos > 0 ? Math.round((Math.max(0, balances.pos1) / sumPos) * 100) + '%' : '0%';
+            document.getElementById('pctPos2').textContent = sumPos > 0 ? Math.round((Math.max(0, balances.pos2) / sumPos) * 100) + '%' : '0%';
+            document.getElementById('pctPos3').textContent = sumPos > 0 ? Math.round((Math.max(0, balances.pos3) / sumPos) * 100) + '%' : '0%';
+            document.getElementById('pctPos4').textContent = sumPos > 0 ? Math.round((Math.max(0, balances.pos4) / sumPos) * 100) + '%' : '0%';
+
+            updateAvailableBalancePreview();
+
+            // Render Tabel Riwayat
+            const filterType = document.getElementById('filterTypeSelect').value;
+            const filteredRecords = records.filter(item => {
+                const isWithdraw = (Number(item.pendapatan) < 0) || (Number(item.tunjanganAnakIstri) < 0) || (Number(item.nafkahIstri) < 0) || (Number(item.perbaikanKendaraan) < 0) || (Number(item.danaMendesak) < 0);
+                if (filterType === 'income') return !isWithdraw;
+                if (filterType === 'withdraw') return isWithdraw;
+                return true;
+            });
+
+            const tbody = document.getElementById('recordsTableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filteredRecords.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
                 return;
             }
 
-            const submitBtn = document.getElementById('submitBtn');
-            const originalBtnHtml = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Menyimpan...</span>`;
+            emptyState.classList.add('hidden');
+            tbody.innerHTML = filteredRecords.map(item => {
+                const isWithdraw = (Number(item.pendapatan) < 0) || (Number(item.tunjanganAnakIstri) < 0) || (Number(item.nafkahIstri) < 0) || (Number(item.perbaikanKendaraan) < 0) || (Number(item.danaMendesak) < 0);
+                const statusBadge = item.synced
+                    ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 shadow-sm"><i data-lucide="cloud-check" class="w-3 h-3"></i> Sheet</span>`
+                    : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300 shadow-sm"><i data-lucide="hard-drive" class="w-3 h-3"></i> Lokal</span>`;
+
+                const formatCell = (val) => {
+                    const n = Number(val) || 0;
+                    if (n === 0) return `<span class="text-slate-400">Rp 0</span>`;
+                    if (n < 0) return `<span class="text-rose-600 dark:text-rose-400 font-semibold">${formatIDR(n)}</span>`;
+                    return `<span class="text-slate-700 dark:text-slate-200">${formatIDR(n)}</span>`;
+                };
+
+                const safeId = String(item.id || '').replace(/"/g, '&quot;');
+
+                return `
+                    <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition-colors animate-fade-in">
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                            <div class="font-semibold text-slate-900 dark:text-white text-xs flex items-center gap-1.5">
+                                <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-slate-400"></i> ${escapeHtml(formatDateIndo(item.tanggal))}
+                            </div>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[160px] pl-5" title="${escapeHtml(item.keterangan)}">${escapeHtml(item.keterangan || '-')}</div>
+                        </td>
+                        <td class="py-3.5 px-4 text-right whitespace-nowrap font-bold text-xs ${isWithdraw ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}">
+                            ${formatIDR(item.pendapatan)}
+                        </td>
+                        <td class="py-3.5 px-4 text-right whitespace-nowrap text-xs">${formatCell(item.tunjanganAnakIstri)}</td>
+                        <td class="py-3.5 px-4 text-right whitespace-nowrap text-xs">${formatCell(item.nafkahIstri)}</td>
+                        <td class="py-3.5 px-4 text-right whitespace-nowrap text-xs">${formatCell(item.perbaikanKendaraan)}</td>
+                        <td class="py-3.5 px-4 text-right whitespace-nowrap text-xs">${formatCell(item.danaMendesak)}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${statusBadge}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                            <button type="button" onclick="openDeleteModal('${safeId}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-all hover:scale-110" title="Hapus">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
             lucide.createIcons();
+        }
+
+        // Sinkronisasi data dari Google Sheet (GET)
+        async function syncFromGoogleSheet(showFeedback = false) {
+            if (!googleSheetWebhookUrl) return;
+            const syncIcon = document.getElementById('syncIcon');
+            if (syncIcon) syncIcon.classList.add('animate-spin');
+
+            try {
+                const response = await fetch(googleSheetWebhookUrl);
+                const data = await response.json();
+                if (data && Array.isArray(data.records)) {
+                    records = data.records.map(r => ({ ...r, synced: true }));
+                    sheetSummary = data.summary || null;
+                    renderAll();
+                    if (showFeedback) showToast('Data berhasil disinkronkan dengan Google Sheet!', 'success');
+                } else if (Array.isArray(data)) {
+                    records = data.map(r => ({ ...r, synced: true }));
+                    sheetSummary = null;
+                    renderAll();
+                    if (showFeedback) showToast('Data berhasil disinkronkan dengan Google Sheet!', 'success');
+                }
+            } catch (err) {
+                console.error('Sinkronisasi gagal:', err);
+                if (showFeedback) showToast('Gagal terhubung ke Google Sheet. Periksa kembali URL Webhook Anda.', 'error');
+            } finally {
+                if (syncIcon) syncIcon.classList.remove('animate-spin');
+            }
+        }
+
+        // Kirim Transaksi ke Google Sheet (POST)
+        async function sendRecordToGoogleSheet(record) {
+            if (!googleSheetWebhookUrl) return false;
+            try {
+                await fetch(googleSheetWebhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(record)
+                });
+                return true;
+            } catch (err) {
+                console.error('Gagal mengirim ke Google Sheet:', err);
+                return false;
+            }
+        }
+
+        // Buka Modal Tarik Dana Langsung dari Kartu Ringkasan
+        function openDirectWithdrawModal(categoryKey, categoryName) {
+            document.getElementById('directWithdrawCategoryKey').value = categoryKey;
+            document.getElementById('modalTitleCategory').textContent = `Tarik Dana: ${categoryName}`;
+            
+            const balances = getCurrentBalances();
+            const map = {
+                tunjanganAnakIstri: balances.pos1,
+                nafkahIstri: balances.pos2
+            };
+            const available = map[categoryKey] || 0;
+            document.getElementById('directAvailableBalance').textContent = formatIDR(available);
+            document.getElementById('directWithdrawAmount').value = '';
+            document.getElementById('directWithdrawNote').value = '';
+
+            document.getElementById('directWithdrawModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeDirectWithdrawModal() {
+            document.getElementById('directWithdrawModal').classList.add('hidden');
+        }
+
+        // Submit Form Tarik Dana Langsung
+        document.getElementById('directWithdrawForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const categoryKey = document.getElementById('directWithdrawCategoryKey').value;
+            const tanggal = document.getElementById('directWithdrawDate').value;
+            const keperluan = document.getElementById('directWithdrawNote').value.trim();
+            const amount = parseIDRInput(document.getElementById('directWithdrawAmount').value);
+
+            if (amount <= 0) {
+                showToast('Nominal penarikan harus lebih dari Rp 0.', 'warning');
+                return;
+            }
+
+            const newWithdraw = {
+                id: 'wd-dir-' + Date.now(),
+                tanggal,
+                keterangan: `[Tarik] ${keperluan}`,
+                pendapatan: -amount,
+                tunjanganAnakIstri: categoryKey === 'tunjanganAnakIstri' ? -amount : 0,
+                nafkahIstri: categoryKey === 'nafkahIstri' ? -amount : 0,
+                perbaikanKendaraan: 0,
+                danaMendesak: 0,
+                synced: Boolean(googleSheetWebhookUrl)
+            };
+
+            records.unshift(newWithdraw);
+            if (sheetSummary) {
+                sheetSummary.totalPendapatan = (Number(sheetSummary.totalPendapatan) || 0) - amount;
+                sheetSummary[categoryKey] = (Number(sheetSummary[categoryKey]) || 0) - amount;
+            }
+            renderAll();
+            closeDirectWithdrawModal();
+
+            if (googleSheetWebhookUrl) {
+                const ok = await sendRecordToGoogleSheet(newWithdraw);
+                if (ok) {
+                    showToast('Penarikan berhasil dicatat & masuk ke Google Sheet!', 'success');
+                    setTimeout(() => syncFromGoogleSheet(false), 1500);
+                } else {
+                    showToast('Tercatat di web, namun gagal mengirim ke Google Sheet.', 'warning');
+                }
+            } else {
+                showToast('Penarikan saldo berhasil dicatat!', 'success');
+            }
+        });
+
+        // Submit Form Pemasukan Harian
+        document.getElementById('financeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tanggal = document.getElementById('inputDate').value;
+            const keterangan = document.getElementById('inputNote').value.trim() || 'Pendapatan Harian';
+            const pendapatan = parseIDRInput(document.getElementById('inputTotalIncome').value);
+            const p1 = parseIDRInput(document.getElementById('inputPos1').value);
+            const p2 = parseIDRInput(document.getElementById('inputPos2').value);
+            const p3 = parseIDRInput(document.getElementById('inputPos3').value);
+            const p4 = parseIDRInput(document.getElementById('inputPos4').value);
+
+            if (pendapatan <= 0) {
+                showToast('Jumlah pendapatan hari ini harus lebih dari Rp 0.', 'warning');
+                return;
+            }
 
             const newRecord = {
-                id: 'rec-' + Date.now(),
+                id: 'trx-' + Date.now(),
                 tanggal,
                 keterangan,
                 pendapatan,
-                tunjanganAnakIstri,
-                nafkahIstri,
-                perbaikanKendaraan,
-                danaMendesak,
-                synced: false
+                tunjanganAnakIstri: p1,
+                nafkahIstri: p2,
+                perbaikanKendaraan: p3,
+                danaMendesak: p4,
+                synced: Boolean(googleSheetWebhookUrl)
             };
 
-            // Jika URL Google Sheet sudah diatur, kirim data via POST lalu sinkronkan ulang
-            if (googleSheetWebhookUrl) {
-                try {
-                    await fetch(googleSheetWebhookUrl, {
-                        method: 'POST',
-                        mode: 'no-cors', // Penting untuk Google Apps Script Web App
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ action: 'create', ...newRecord })
-                    });
-                    newRecord.synced = true;
-                    showToast('Tersimpan di web & terkirim ke Google Sheet!', 'success');
-                } catch (err) {
-                    console.error('Gagal kirim ke Google Sheet:', err);
-                    showToast('Tersimpan di web, namun gagal sinkron ke Google Sheet.', 'warning');
-                }
-            } else {
-                showToast('Data berhasil dicatat secara real-time!', 'success');
-            }
-
-            // Tambahkan ke urutan paling atas & render ulang
             records.unshift(newRecord);
+            if (sheetSummary) {
+                sheetSummary.totalPendapatan = (Number(sheetSummary.totalPendapatan) || 0) + pendapatan;
+                sheetSummary.tunjanganAnakIstri = (Number(sheetSummary.tunjanganAnakIstri) || 0) + p1;
+                sheetSummary.nafkahIstri = (Number(sheetSummary.nafkahIstri) || 0) + p2;
+                sheetSummary.perbaikanKendaraan = (Number(sheetSummary.perbaikanKendaraan) || 0) + p3;
+                sheetSummary.danaMendesak = (Number(sheetSummary.danaMendesak) || 0) + p4;
+            }
             renderAll();
 
-            // Tarik ulang data dari Google Sheet setelah 1.5 detik agar 100% identik dengan database
-            if (googleSheetWebhookUrl) {
-                setTimeout(() => syncFromGoogleSheet(false), 1500);
-            }
-
-            // Reset Form Input Angka
             document.getElementById('inputNote').value = '';
             document.getElementById('inputTotalIncome').value = '';
             document.getElementById('inputPos1').value = '';
@@ -691,158 +1178,69 @@ function doGet(e) {
             document.getElementById('inputPos4').value = '';
             calculateRemaining();
 
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
-            lucide.createIcons();
+            if (googleSheetWebhookUrl) {
+                const ok = await sendRecordToGoogleSheet(newRecord);
+                if (ok) {
+                    showToast('Pemasukan disimpan & terkirim ke Google Sheet!', 'success');
+                    setTimeout(() => syncFromGoogleSheet(false), 1500);
+                } else {
+                    showToast('Tersimpan di web, namun gagal mengirim ke Google Sheet.', 'warning');
+                }
+            } else {
+                showToast('Pemasukan harian berhasil dicatat!', 'success');
+            }
         });
 
-        // Render Ulang Ringkasan Saldo & Tabel Riwayat
-        function renderAll() {
-            let grandTotal = 0;
-            let sumPos1 = 0;
-            let sumPos2 = 0;
-            let sumPos3 = 0;
-            let sumPos4 = 0;
+        // Submit Form Penarikan / Penggunaan Saldo
+        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tanggal = document.getElementById('withdrawDate').value;
+            const keperluan = document.getElementById('withdrawNote').value.trim();
+            const category = document.getElementById('withdrawCategory').value;
+            const amount = parseIDRInput(document.getElementById('withdrawAmount').value);
 
-            // Jika terhubung & memiliki ringkasan langsung dari Google Sheet, gunakan angka dari Sheet
-            if (googleSheetWebhookUrl && sheetSummary) {
-                grandTotal = Number(sheetSummary.totalPendapatan) || 0;
-                sumPos1 = Number(sheetSummary.tunjanganAnakIstri) || 0;
-                sumPos2 = Number(sheetSummary.nafkahIstri) || 0;
-                sumPos3 = Number(sheetSummary.perbaikanKendaraan) || 0;
-                sumPos4 = Number(sheetSummary.danaMendesak) || 0;
-            } else {
-                records.forEach(item => {
-                    grandTotal += Number(item.pendapatan) || 0;
-                    sumPos1 += Number(item.tunjanganAnakIstri) || 0;
-                    sumPos2 += Number(item.nafkahIstri) || 0;
-                    sumPos3 += Number(item.perbaikanKendaraan) || 0;
-                    sumPos4 += Number(item.danaMendesak) || 0;
-                });
-            }
-
-            document.getElementById('grandTotalIncome').textContent = formatIDR(grandTotal);
-            document.getElementById('totalPos1').textContent = formatIDR(sumPos1);
-            document.getElementById('totalPos2').textContent = formatIDR(sumPos2);
-            document.getElementById('totalPos3').textContent = formatIDR(sumPos3);
-            document.getElementById('totalPos4').textContent = formatIDR(sumPos4);
-
-            const totalAllocated = sumPos1 + sumPos2 + sumPos3 + sumPos4;
-            document.getElementById('pctPos1').textContent = totalAllocated > 0 ? Math.round((sumPos1 / totalAllocated) * 100) + '%' : '0%';
-            document.getElementById('pctPos2').textContent = totalAllocated > 0 ? Math.round((sumPos2 / totalAllocated) * 100) + '%' : '0%';
-            document.getElementById('pctPos3').textContent = totalAllocated > 0 ? Math.round((sumPos3 / totalAllocated) * 100) + '%' : '0%';
-            document.getElementById('pctPos4').textContent = totalAllocated > 0 ? Math.round((sumPos4 / totalAllocated) * 100) + '%' : '0%';
-
-            const tbody = document.getElementById('recordsTableBody');
-            const emptyState = document.getElementById('emptyState');
-
-            if (records.length === 0) {
-                tbody.innerHTML = '';
-                emptyState.classList.remove('hidden');
+            if (amount <= 0) {
+                showToast('Nominal penarikan harus lebih dari Rp 0.', 'warning');
                 return;
             }
 
-            emptyState.classList.add('hidden');
-            tbody.innerHTML = records.map(item => {
-                const statusBadge = item.synced
-                    ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300" title="Tersinkron dengan Google Sheet"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Sheet</span>`
-                    : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300" title="Tersimpan di sesi web"><i data-lucide="clock" class="w-3 h-3"></i> Lokal</span>`;
+            const newWithdraw = {
+                id: 'wd-' + Date.now(),
+                tanggal,
+                keterangan: `[Tarik] ${keperluan}`,
+                pendapatan: -amount,
+                tunjanganAnakIstri: category === 'tunjanganAnakIstri' ? -amount : 0,
+                nafkahIstri: category === 'nafkahIstri' ? -amount : 0,
+                perbaikanKendaraan: category === 'perbaikanKendaraan' ? -amount : 0,
+                danaMendesak: category === 'danaMendesak' ? -amount : 0,
+                synced: Boolean(googleSheetWebhookUrl)
+            };
 
-                return `
-                    <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-700/30 transition">
-                        <td class="py-3.5 px-4 whitespace-nowrap">
-                            <div class="font-semibold text-slate-900 dark:text-white text-xs">${escapeHtml(item.tanggal)}</div>
-                            <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[140px]">${escapeHtml(item.keterangan)}</div>
-                        </td>
-                        <td class="py-3.5 px-4 text-right font-bold text-slate-900 dark:text-white whitespace-nowrap text-xs">${formatIDR(item.pendapatan)}</td>
-                        <td class="py-3.5 px-4 text-right text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap text-xs">${formatIDR(item.tunjanganAnakIstri)}</td>
-                        <td class="py-3.5 px-4 text-right text-rose-600 dark:text-rose-400 font-medium whitespace-nowrap text-xs">${formatIDR(item.nafkahIstri)}</td>
-                        <td class="py-3.5 px-4 text-right text-amber-600 dark:text-amber-400 font-medium whitespace-nowrap text-xs">${formatIDR(item.perbaikanKendaraan)}</td>
-                        <td class="py-3.5 px-4 text-right text-emerald-600 dark:text-emerald-400 font-semibold whitespace-nowrap text-xs">${formatIDR(item.danaMendesak)}</td>
-                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${statusBadge}</td>
-                        <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                            <button onclick="openDeleteModal('${escapeHtml(item.id)}')" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition" title="Hapus">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        // Fungsi Sinkronisasi Dua Arah: Menyamakan data website dengan database Google Sheet
-        async function syncFromGoogleSheet(showNotification = false) {
-            if (!googleSheetWebhookUrl) {
-                if (showNotification) {
-                    showToast('Hubungkan URL Google Sheet terlebih dahulu.', 'warning');
-                    openSetupModal();
-                }
-                return;
+            records.unshift(newWithdraw);
+            if (sheetSummary) {
+                sheetSummary.totalPendapatan = (Number(sheetSummary.totalPendapatan) || 0) - amount;
+                sheetSummary[category] = (Number(sheetSummary[category]) || 0) - amount;
             }
+            renderAll();
 
-            const syncIcon = document.getElementById('syncIcon');
-            if (syncIcon) syncIcon.classList.add('animate-spin');
+            document.getElementById('withdrawNote').value = '';
+            document.getElementById('withdrawAmount').value = '';
+            updateAvailableBalancePreview();
 
-            try {
-                // Tambahkan parameter timestamp agar browser tidak mengambil cache lama
-                const fetchUrl = googleSheetWebhookUrl + (googleSheetWebhookUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-                const res = await fetch(fetchUrl);
-                const payload = await res.json();
-
-                // Mendukung format baru { records, summary } maupun format lama (array)
-                const sheetData = Array.isArray(payload) ? payload : (payload.records || []);
-                if (payload && payload.summary) {
-                    sheetSummary = payload.summary;
+            if (googleSheetWebhookUrl) {
+                const ok = await sendRecordToGoogleSheet(newWithdraw);
+                if (ok) {
+                    showToast('Penarikan dicatat & saldo Google Sheet berkurang!', 'success');
+                    setTimeout(() => syncFromGoogleSheet(false), 1500);
                 } else {
-                    sheetSummary = null;
+                    showToast('Penarikan dicatat di web, namun gagal terkirim ke Sheet.', 'warning');
                 }
-
-                if (Array.isArray(sheetData)) {
-                    const formattedSheetRecords = sheetData.reverse().map((row, idx) => {
-                        let parsedDate = new Date().toISOString().split('T')[0];
-                        if (row.tanggal) {
-                            const d = new Date(row.tanggal);
-                            if (!isNaN(d.getTime())) {
-                                parsedDate = d.toISOString().split('T')[0];
-                            } else if (typeof row.tanggal === 'string') {
-                                parsedDate = row.tanggal.split('T')[0];
-                            }
-                        }
-
-                        return {
-                            id: row.id || ('sheet-' + idx),
-                            tanggal: parsedDate,
-                            keterangan: row.keterangan || 'Pendapatan Harian',
-                            pendapatan: Number(row.pendapatan) || 0,
-                            tunjanganAnakIstri: Number(row.tunjanganAnakIstri) || 0,
-                            nafkahIstri: Number(row.nafkahIstri) || 0,
-                            perbaikanKendaraan: Number(row.perbaikanKendaraan) || 0,
-                            danaMendesak: Number(row.danaMendesak) || 0,
-                            synced: true
-                        };
-                    });
-
-                    // Ganti seluruh data di website agar 100% sama persis dengan Google Sheet
-                    records = formattedSheetRecords;
-                    renderAll();
-
-                    if (showNotification) {
-                        showToast(`Ringkasan saldo & ${records.length} baris data sudah sama dengan Google Sheet!`, 'success');
-                    }
-                }
-            } catch (err) {
-                console.error('Gagal sinkronisasi:', err);
-                if (showNotification) {
-                    showToast('Gagal mengambil data dari Google Sheet. Pastikan akses Web App diatur ke "Siapa saja (Anyone)".', 'error');
-                }
-            } finally {
-                if (syncIcon) syncIcon.classList.remove('animate-spin');
+            } else {
+                showToast('Penarikan saldo berhasil dicatat!', 'info');
             }
-        }
+        });
 
-        // Pengaturan Modal Google Sheet
+        // Modal Pengaturan Google Sheet
         function openSetupModal() {
             document.getElementById('webhookUrlInput').value = googleSheetWebhookUrl;
             document.getElementById('setupModal').classList.remove('hidden');
@@ -853,79 +1251,60 @@ function doGet(e) {
             document.getElementById('setupModal').classList.add('hidden');
         }
 
-        async function saveWebhookUrl() {
+        function saveWebhookUrl() {
             const url = document.getElementById('webhookUrlInput').value.trim();
-            const btn = document.getElementById('sheetStatusBtn');
-            const dot = document.getElementById('statusDot');
-            const text = document.getElementById('statusText');
-
-            if (url && !url.startsWith('https://script.google.com/')) {
-                showToast('URL harus diawali dengan https://script.google.com/', 'error');
-                return;
-            }
-
             googleSheetWebhookUrl = url;
 
-            // Hentikan interval sinkronisasi lama jika ada
-            if (autoSyncInterval) {
-                clearInterval(autoSyncInterval);
-                autoSyncInterval = null;
-            }
+            const statusBtn = document.getElementById('sheetStatusBtn');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
 
             if (googleSheetWebhookUrl) {
-                btn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:opacity-90 transition';
-                dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
-                text.textContent = 'Terhubung ke Google Sheet';
+                statusBtn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:opacity-90 transition';
+                statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+                statusText.textContent = 'Terhubung ke Google Sheet';
                 closeSetupModal();
-                
-                // Langsung samakan data website dengan Google Sheet
-                await syncFromGoogleSheet(true);
+                showToast('URL Google Sheet tersimpan! Menyinkronkan data...', 'success');
+                syncFromGoogleSheet(false);
 
-                // Aktifkan sinkronisasi otomatis setiap 15 detik agar perubahan manual di Sheet ikut tampil di Web
-                autoSyncInterval = setInterval(() => {
-                    syncFromGoogleSheet(false);
-                }, 15000);
+                if (autoSyncInterval) clearInterval(autoSyncInterval);
+                autoSyncInterval = setInterval(() => syncFromGoogleSheet(false), 15000);
             } else {
                 sheetSummary = null;
-                btn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:opacity-90 transition';
-                dot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
-                text.textContent = 'Mode Lokal (Klik Atur Sheet)';
-                renderAll();
-                showToast('Koneksi Google Sheet dinonaktifkan (Mode Lokal).', 'info');
+                statusBtn.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:opacity-90 transition';
+                statusDot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+                statusText.textContent = 'Mode Lokal (Klik Atur Sheet)';
+                if (autoSyncInterval) clearInterval(autoSyncInterval);
                 closeSetupModal();
+                renderAll();
+                showToast('Beralih ke Mode Lokal.', 'info');
             }
         }
 
+        // Salin Kode Apps Script
         function copyAppsScript() {
             const code = document.getElementById('appsScriptCode').innerText;
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = code;
+            tempTextarea.style.position = 'fixed';
+            tempTextarea.style.opacity = '0';
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
 
             try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    const btnText = document.getElementById('copyBtnText');
-                    btnText.textContent = 'Tersalin!';
-                    showToast('Kode Google Apps Script berhasil disalin!', 'success');
-                    setTimeout(() => {
-                        btnText.textContent = 'Salin Kode';
-                    }, 2000);
-                } else {
-                    showToast('Gagal menyalin otomatis. Silakan blok dan salin teks kode secara manual.', 'warning');
-                }
+                document.execCommand('copy');
+                const btnText = document.getElementById('copyBtnText');
+                btnText.textContent = 'Tersalin!';
+                showToast('Kode Google Apps Script berhasil disalin!', 'success');
+                setTimeout(() => { btnText.textContent = 'Salin Kode'; }, 2000);
             } catch (err) {
-                console.error('Gagal menyalin teks:', err);
-                showToast('Gagal menyalin otomatis. Silakan blok dan salin teks kode secara manual.', 'warning');
+                showToast('Gagal menyalin otomatis. Silakan blok teks dan tekan Ctrl+C.', 'warning');
             } finally {
-                document.body.removeChild(textarea);
+                document.body.removeChild(tempTextarea);
             }
         }
 
-        // Modal Konfirmasi Hapus
+        // Modal & Eksekusi Hapus Data
         function openDeleteModal(id) {
             recordIdToDelete = id;
             document.getElementById('deleteModal').classList.remove('hidden');
@@ -938,53 +1317,77 @@ function doGet(e) {
         }
 
         document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
-            if (recordIdToDelete) {
-                const targetId = recordIdToDelete;
-                records = records.filter(r => r.id !== targetId);
-                renderAll();
+            if (!recordIdToDelete) return;
 
-                // Hapus juga baris yang sama di Google Sheet jika terhubung
-                if (googleSheetWebhookUrl) {
-                    try {
-                        await fetch(googleSheetWebhookUrl, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ action: 'delete', id: targetId })
-                        });
-                        showToast('Catatan dihapus dari website & Google Sheet.', 'info');
-                    } catch (e) {
-                        showToast('Catatan dihapus dari website.', 'info');
-                    }
-                } else {
-                    showToast('Catatan berhasil dihapus.', 'info');
-                }
+            const targetId = recordIdToDelete;
+            const targetRecord = records.find(r => r.id === targetId);
+            const deleteBtn = document.getElementById('confirmDeleteBtn');
+            const originalBtnHtml = deleteBtn.innerHTML;
+
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Menghapus...</span>`;
+            lucide.createIcons();
+
+            records = records.filter(r => r.id !== targetId);
+            if (sheetSummary && targetRecord) {
+                sheetSummary.totalPendapatan = (Number(sheetSummary.totalPendapatan) || 0) - (Number(targetRecord.pendapatan) || 0);
+                sheetSummary.tunjanganAnakIstri = (Number(sheetSummary.tunjanganAnakIstri) || 0) - (Number(targetRecord.tunjanganAnakIstri) || 0);
+                sheetSummary.nafkahIstri = (Number(sheetSummary.nafkahIstri) || 0) - (Number(targetRecord.nafkahIstri) || 0);
+                sheetSummary.perbaikanKendaraan = (Number(sheetSummary.perbaikanKendaraan) || 0) - (Number(targetRecord.perbaikanKendaraan) || 0);
+                sheetSummary.danaMendesak = (Number(sheetSummary.danaMendesak) || 0) - (Number(targetRecord.danaMendesak) || 0);
             }
+            renderAll();
+
+            if (googleSheetWebhookUrl) {
+                try {
+                    await fetch(googleSheetWebhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({
+                            action: 'delete',
+                            id: targetId,
+                            tanggal: targetRecord ? targetRecord.tanggal : '',
+                            keterangan: targetRecord ? targetRecord.keterangan : '',
+                            pendapatan: targetRecord ? targetRecord.pendapatan : 0
+                        })
+                    });
+                    showToast('Data dihapus dari website & Google Sheet!', 'success');
+                    setTimeout(() => syncFromGoogleSheet(false), 1500);
+                } catch (e) {
+                    console.error('Gagal menghapus di Google Sheet:', e);
+                    showToast('Data dihapus di website, namun gagal terhubung ke Google Sheet.', 'warning');
+                }
+            } else {
+                showToast('Catatan berhasil dihapus.', 'info');
+            }
+
+            deleteBtn.disabled = false;
+            deleteBtn.innerHTML = originalBtnHtml;
             closeDeleteModal();
         });
 
-        // Ekspor ke CSV (Cadangan Offline)
+        // Ekspor ke CSV
         function exportToCSV() {
             if (records.length === 0) {
-                showToast('Tidak ada data untuk diunduh.', 'warning');
+                showToast('Belum ada data untuk diunduh.', 'warning');
                 return;
             }
-            const headers = ['Tanggal', 'Keterangan', 'Pendapatan Harian (IDR)', 'Tunjangan Anak & Istri', 'Nafkah Istri', 'Perbaikan Kendaraan', 'Dana Mendesak'];
+            const headers = ['Tanggal', 'Keterangan', 'Mutasi Total (IDR)', 'Tunjangan Anak & Istri', 'Nafkah Istri', 'Perbaikan Kendaraan', 'Dana Mendesak'];
             const rows = records.map(r => [
                 r.tanggal,
-                `"${String(r.keterangan).replace(/"/g, '""')}"`,
+                `"${String(r.keterangan || '').replace(/"/g, '""')}"`,
                 r.pendapatan,
                 r.tunjanganAnakIstri,
                 r.nafkahIstri,
                 r.perbaikanKendaraan,
                 r.danaMendesak
             ]);
-
-            const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+            const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `keuangan_keluarga_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute('download', `keuangan_keluarga_${new Date().toISOString().slice(0, 10)}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -996,47 +1399,59 @@ function doGet(e) {
             document.documentElement.classList.toggle('dark');
         }
 
-        // Helper Keamanan HTML
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Sistem Notifikasi Toast
+        // Notifikasi Toast
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-
             const colors = {
-                success: 'bg-emerald-600 text-white',
-                error: 'bg-rose-600 text-white',
-                warning: 'bg-amber-500 text-white',
-                info: 'bg-slate-800 text-white dark:bg-slate-700'
+                success: 'bg-emerald-600 text-white shadow-emerald-500/20',
+                warning: 'bg-amber-500 text-white shadow-amber-500/20',
+                error: 'bg-rose-600 text-white shadow-rose-500/20',
+                info: 'bg-slate-800 text-white dark:bg-slate-700 shadow-slate-900/20'
             };
-
             const icons = {
-                success: 'check-circle',
-                error: 'alert-circle',
+                success: 'check-circle-2',
                 warning: 'alert-triangle',
+                error: 'x-circle',
                 info: 'info'
             };
 
-            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-lg text-xs font-medium flex items-center gap-2.5 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0`;
+            const toast = document.createElement('div');
+            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-xl text-xs font-medium flex items-center gap-2.5 pointer-events-auto transition-all duration-300 transform translate-y-3 opacity-0`;
             toast.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 shrink-0"></i><span>${escapeHtml(message)}</span>`;
-
             container.appendChild(toast);
             lucide.createIcons();
 
             requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
+                toast.classList.remove('translate-y-3', 'opacity-0');
             });
 
             setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
+                toast.classList.add('opacity-0', 'translate-y-3');
                 setTimeout(() => toast.remove(), 300);
             }, 3500);
         }
+
+        // Inisialisasi Halaman Saat Dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('inputDate').value = today;
+            document.getElementById('withdrawDate').value = today;
+            document.getElementById('directWithdrawDate').value = today;
+
+            document.querySelectorAll('.idr-input').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    e.target.value = formatNumberInput(e.target.value);
+                    if (e.target.id === 'withdrawAmount' || e.target.id === 'directWithdrawAmount') {
+                        updateAvailableBalancePreview();
+                    } else {
+                        calculateRemaining();
+                    }
+                });
+            });
+
+            renderAll();
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
