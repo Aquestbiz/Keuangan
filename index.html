@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dompet Keluarga - Manajemen Keuangan & Dana Mendesak</title>
+    <title>Dompet Keluarga - Manajemen Keuangan</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Inter -->
@@ -42,8 +42,8 @@
                     <i data-lucide="wallet" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white leading-none">Dompet Keluarga</h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Pencatatan Real-Time & Google Sheets</p>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white leading-none">Dompet Instan</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Riwayat Catatan Keuangan Keluarga</p>
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                 <button onclick="openSetupModal()" id="sheetStatusBtn" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:opacity-90 transition">
                     <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse" id="statusDot"></span>
                     <span id="statusText" class="hidden sm:inline">Mode Lokal (Klik Atur Sheet)</span>
-                    <span class="sm:hidden">Sheet</span>
+                    <span class="sm:hidden">Hubungkan</span>
                 </button>
 
                 <!-- Toggle Dark Mode -->
@@ -72,10 +72,10 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <h2 class="text-base font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
                     <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-600 animate-spin-slow"></i>
-                    Ringkasan Saldo Pos Tabungan (Real-Time)
+                    Ringkasan Saldo Tabungan
                 </h2>
                 <div class="text-xs text-slate-500 dark:text-slate-400">
-                    Total Akumulasi Pendapatan: <span id="grandTotalIncome" class="font-bold text-slate-900 dark:text-white text-sm transition-all duration-300">Rp 0</span>
+                    Total Keseluruhan Pendapatan: <span id="grandTotalIncome" class="font-bold text-slate-900 dark:text-white text-sm transition-all duration-300">Rp 0</span>
                 </div>
             </div>
 
@@ -94,7 +94,7 @@
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos1">Rp 0</h3>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
-                        <span class="text-[11px] text-slate-400">Pos Tabungan 1</span>
+                        <span class="text-[11px] text-slate-400">Simpanan 1</span>
                         <button type="button" onclick="openDirectWithdrawModal('tunjanganAnakIstri', 'Tunjangan Anak & Istri')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 transition flex items-center gap-1 shadow-sm">
                             <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i>
                             <span>Tarik Dana</span>
@@ -116,7 +116,7 @@
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos2">Rp 0</h3>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
-                        <span class="text-[11px] text-slate-400">Pos Tabungan 2</span>
+                        <span class="text-[11px] text-slate-400">Simpanan 2</span>
                         <button type="button" onclick="openDirectWithdrawModal('nafkahIstri', 'Nafkah Istri')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950 dark:hover:bg-rose-900 text-rose-600 dark:text-rose-300 transition flex items-center gap-1 shadow-sm">
                             <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i>
                             <span>Tarik Dana</span>
@@ -138,7 +138,7 @@
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos3">Rp 0</h3>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
-                        <span class="text-[11px] text-slate-400">Pos Tabungan 3</span>
+                        <span class="text-[11px] text-slate-400">Simpanan 3</span>
                         <span class="text-[11px] text-slate-400 italic">Gunakan Form Bawah</span>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight" id="totalPos4">Rp 0</h3>
                     </div>
                     <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between relative z-10">
-                        <span class="text-[11px] text-slate-400">Pos Tabungan 4</span>
+                        <span class="text-[11px] text-slate-400">Simpanan 4</span>
                         <span class="text-[11px] text-slate-400 italic">Gunakan Form Bawah</span>
                     </div>
                 </div>
